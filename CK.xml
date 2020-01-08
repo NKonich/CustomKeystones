@@ -1,0 +1,10 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+	<Frame name="CustomKeys_Frame">
+		<Size> <AbsDimension x= "400" y = "200"/> </Size>
+		<Anchors>
+			<Offset> <AbsDimension x = "-40" y = "-40"/> </Offset>
+		</Anchors>
+	</Frame>
+</Ui>
