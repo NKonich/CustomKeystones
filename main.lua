@@ -64,11 +64,9 @@ keyLevel = 0
 currZone = GetZoneText()
 
 -- Check how many bosses have been killed
-local function OnKeyStart(level, mobs, values, bosses)
-	local killsNeeded = table.getn(bosses)
-end
 
--- Helper function to do Percent Lookups
+
+-- Helper functions
 local function Search(destName, mobs, values)
 	for i=1,table.getn(mobs) do
 		if mobs[i] == destName then
@@ -76,6 +74,18 @@ local function Search(destName, mobs, values)
 		end
 	end
 end
+
+local function OnKeyStart(level, mobs, values, bosses)
+	local killsNeeded = table.getn(bosses)
+end
+
+-- This is going to be the On Button Click to start the Key (On the left side when players enter the zone.)
+local function ResetClock()
+	currentPercent = 0
+	timeLimit = 1800
+	timeRemaining = timeLimit
+end
+
 
 local function OnEvent(self, event)
 	local timestamp, subevent, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
@@ -104,12 +114,7 @@ local function OnEvent(self, event)
 	end
 end
 
--- This is going to be the On Button Click to start the Key (On the left side when players enter the zone.)
-local function ResetClock()
-	currentPercent = 0
-	timeLimit = 1800
-	timeRemaining = timeLimit
-end
+
 
 --[[ Core Menu for starting Keystones
 		
@@ -172,7 +177,7 @@ local function StartKey()
 	-- KeyManager's scripts to handle deaths and to update the clock/timers.
 	keyManager:SetScript("OnEvent", OnEvent)
 	keyManager:SetScript("OnUpdate", function(self, elapsed)
-			-- Check if player leaves or enters the dungeon.
+		-- Checks if player leaves or enters the dungeon.
 		if currZone == GetZoneText() then
 			if currZone == "Ahn'Kahet, The Old Kingdom" then
 				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
@@ -289,10 +294,7 @@ keyStarter.startButton:SetSize(200, 30)
 keyStarter.startButton:SetText("Start Key")
 keyStarter.startButton:SetNormalFontObject("GameFontNormalLarge")
 keyStarter.startButton:SetHighlightFontObject("GameFontHighlightLarge")
-keyStarter.startButton:Show()
-keyStarter:SetScript("OnClick", StartKey())
-print("We're here")
-keyStarter:Show()
+keyStarter.startButton:SetScript("OnClick", StartKey())
 
 --[[
 	General notes and plans
