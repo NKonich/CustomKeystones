@@ -14,7 +14,7 @@ print('Hello World!')
 		
 		- Notes: Violet Hold Culling of Stratholme and Halls of Reflection will not get % since they are fixed times already.
 ]]
-WotLK = {AK, DTK, GD, HOL, HOS, NX, OC, UP}
+WotLK = {"Ahn'Kahet Old Kingdom", "Drak'Tharon Keep", "Gundrak", "Halls of Lightning","Halls of Stone", "The Nexus", "The Oculus", "Utgarde Pinnacle"}
 
 -- Ahn'Kahet Percentage Tables
 AK = {"Savage Cave Beast", "Plundering Geist","Deep Crawler", "Ahn'kahar Web Winder", "Ahn'kahar Slasher", "Bonegrinder", "Plague Walker", "Frostbringer", "Eye of Taldaram", "Twilight Worshipper", "Twilight Apostle", "Twilight Darkcaster", "Ahn'kahar Spell Flinger", "Forgotten One"}
@@ -55,21 +55,24 @@ UP_Values = {1.5, 2, 1.7, 5.2, .8, 4, 4, 4, 4, 1.6, 1.8, 2.4, 2.2, 2, .1, .2, .3
 -- Current Tournament/Ranked Map Pool
 RANKED_MAPS = {UP, DTK, HOL, AK, GD, NX}
 
+-- Default Key Rules
 timeRemaining = 1800 -- Default to 30 minute times.
 currentPercent = 0
-defaultDifficulty = 0 --Default to M0.
 timeLimit = 1800
+keyStarted = false
+keyLevel = 0
+currZone = GetZoneText()
+
+-- Check how many bosses have been killed
+local function OnKeyStart(level, mobs, values, bosses)
+	local killsNeeded = table.getn(bosses)
+end
 
 -- Helper function to do Percent Lookups
 local function Search(destName, mobs, values)
 	for i=1,table.getn(mobs) do
 		if mobs[i] == destName then
 			currentPercent = currentPercent + values[i]
-			if currentPercent >= 100 then
-				print(string.format("You are at %d and have completed the dungeon!", currentPercent))
-			else
-				print(string.format("You are at %d", currentPercent))
-			end
 		end
 	end
 end
@@ -91,6 +94,8 @@ local function OnEvent(self, event)
 			search(destName, DTK, DTK_Values)
 		elseif GetZoneText() == "Halls of Lightning" then
 			Search(destName, HOL, HOL_Values)
+		elseif GetZoneText() == "Halls of Stone" then
+			Search(destName, HOS, HOS_Values)
 		elseif GetZoneText() == "The Oculus" then
 			Search(destName, OC, OC_Values)
 		elseif GetZoneText() == "Utgarde Keep" then
@@ -100,42 +105,202 @@ local function OnEvent(self, event)
 end
 
 -- This is going to be the On Button Click to start the Key (On the left side when players enter the zone.)
-local function OnZoneEntry(self, event)
+local function ResetClock()
 	currentPercent = 0
 	timeLimit = 1800
 	timeRemaining = timeLimit
 end
-local f = CreateFrame("Frame", "CustomKeys_Frame", UIParent)
+
+--[[ Core Menu for starting Keystones
+		
+		TODO:
+			Create Basic Menu Layout
+			Add Start Key Button
+				-Don't allow players to start keys in invalid Zones
+			Add IO Score to the Menu
+
+]]
+--[[ Core Frame for the Keystone
+	Clean up the OnUpdate method, should not be called so often.
+
+]]
 
 
--- Builds the UI, TODO: ADD Progress Bar for %.
-f:SetPoint("LEFT")
-f:SetSize(400, 200)
-f.texture = f:CreateTexture(nil, "BACKGROUND")
-f.texture:SetAllPoints(true)
-f.texture:SetTexture(1, 1, 1, 1)
-f.text = f:CreateFontString(nil, "OVERLAY", "GameFontNormal")
-f.text:SetPoint("BOTTOM", f, "BOTTOM", -5, 0)
-f.text:SetText("This is my frame!")
-f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
-f:SetScript("OnEvent", OnEvent)
-f:SetScript("OnUpdate", function(self, elapsed)
-	timeRemaining = timeRemaining - elapsed
-	-- Show the end result and click to restart it
-	if timeRemaining <= 0 then
-		if currentPercent >= 100 then
-			print("You have completed the keystone, congratulations!")
+local function StartKey()
+	print("We're here")
+	local keyManager = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
+	keyManager:SetPoint("LEFT")
+	keyManager:SetSize(250, 300)
+
+	-- Timer Set Up
+	keyManager.text = keyManager:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	keyManager.text:SetPoint("TOPLEFT", keyManager, "TOPLEFT", 10, -8)
+	keyManager:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED")
+	keyManager.timer = keyManager:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+	keyManager.timer:SetPoint("BOTTOM", keyManager, "BOTTOM", 0, 10)
+	keyManager.timerText = keyManager:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+	keyManager.timerText:SetPoint("BOTTOM", keyManager, "BOTTOM", 0, 35)
+	keyManager.timerText:SetText("Time Remaining:")
+
+	-- Progress Bar Handlers
+	keyManager.innerFrame = CreateFrame("Frame", nil, keyManager, "CastingBarFrameTemplate")
+	keyManager.innerFrame:SetPoint("CENTER", keyManager, "BOTTOM", 0, 60)
+	keyManager.innerFrame:SetSize(200, 30)
+
+	-- Creates the correct texture.
+	local z = CreateFrame("Frame",nil,keyManager.innerFrame)
+	z:SetPoint("CENTER", keyManager.innerFrame, "CENTER", 0, 15)
+	z:SetSize(190, 10)
+	local t = z:CreateTexture(nil,"OVERLAY")
+	t:SetTexture("Interface\\GLUES\\LoadingBar\\Loading-BarFill.blp")
+	t:SetAllPoints(z)
+	z.texture = t
+	z:Show()
+
+
+	-- Handles the Dungeon Image and text above the image.
+	keyManager.keyText = keyManager:CreateFontString(nil, "OVERLAY", "QuestFont_Enormous")
+	keyManager.keyText:SetPoint("CENTER", keyManager, "CENTER", 0, 100)
+	keyManager.keyText:Show()
+	keyManager.keySubtext = keyManager:CreateFontString(nil, "OVERLAY", "GameFontWhiteSmall")
+	keyManager.keySubtext:SetPoint("CENTER", keyManager, "CENTER", 0, 80)
+	keyManager.keySubtext:Show()
+	keyManager.affixes = keyManager:CreateFontString(nil, "OVERLAY", "GameFontHighlightExtraSmall")
+	keyManager.affixes:SetPoint("CENTER", keyManager, "CENTER", 0, 65)
+	keyManager.affixes:Show()
+
+	-- KeyManager's scripts to handle deaths and to update the clock/timers.
+	keyManager:SetScript("OnEvent", OnEvent)
+	keyManager:SetScript("OnUpdate", function(self, elapsed)
+			-- Check if player leaves or enters the dungeon.
+		if currZone == GetZoneText() then
+			if currZone == "Ahn'Kahet, The Old Kingdom" then
+				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+				keyManager.keyImage:SetSize(100, 100)
+				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Ahnkalet.blp")
+				y:SetAllPoints()
+				keyManager.keyImage.texture = y
+				keyManager.keyImage:Show()
+				keyStarted = true
+			elseif currZone == "Halls of Lightning" then
+				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+				keyManager.keyImage:SetSize(100, 100)
+				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+				y:SetTexture("Interface\\LFGFRAME\\LFGICON-HALLSOFLIGHTNING.blp")
+				y:SetAllPoints()
+				keyManager.keyImage.texture = y
+				keyManager.keyImage:Show()
+				keyStarted = true
+			elseif currZone == "Halls of Stone" then
+				keyStarted = true
+				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+				keyManager.keyImage:SetSize(100, 100)
+				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-HallsofStone.blp")
+				y:SetAllPoints()
+				keyManager.keyImage.texture = y
+				keyManager.keyImage:Show()
+			elseif currZone == "The Oculus" then
+				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+				keyManager.keyImage:SetSize(100, 100)
+				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheOculus.blp")
+				y:SetAllPoints()
+				keyManager.keyImage.texture = y
+				keyManager.keyImage:Show()
+				keyStarted = true
+			elseif currZone == "The Nexus" then
+				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+				keyManager.keyImage:SetSize(100, 100)
+				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheNexus.blp")
+				y:SetAllPoints()
+				keyManager.keyImage.texture = y
+				keyManager.keyImage:Show()
+				keyStarted = true
+			elseif currZone == "Gundrak" then
+				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+				keyManager.keyImage:SetSize(100, 100)
+				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Gundrak.blp")
+				y:SetAllPoints()
+				keyManager.keyImage.texture = y
+				keyManager.keyImage:Show()
+			elseif currZone == "Drak'Tharon Keep" then
+				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+				keyManager.keyImage:SetSize(100, 100)
+				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-.blp")
+				y:SetAllPoints()
+				keyManager.keyImage.texture = y
+				keyManager.keyImage:Show()
+				keyStarted = true
+			else
+				keyStarted = false
+			end
+			if keyStarted == true then
+				keyManager.keyText:SetText(currZone)
+				keyManager.keySubtext:SetText("Bosses killed: 0/4")
+				keyManager.affixes:SetText("Affixes: None")
+				timeRemaining = timeRemaining - elapsed
+				-- Show the end result and click to restart it
+				if timeRemaining <= 0 then
+					if currentPercent >= 100 then
+						print("You have completed the keystone, congratulations!")
+					else
+						print("You have failed the keystone, try again next time!")
+					end
+				-- Make the UI Change to show the timer meter (Look at https://github.com/jordonwow/omnibar to figure it out)
+				else
+					z:SetPoint("CENTER", keyManager.innerFrame, "LEFT", currentPercent + 5, 10)
+					z:SetSize(190 * ((currentPercent + .01) / 100), 10)
+					t:SetTexture("Interface\\GLUES\\LoadingBar\\Loading-BarFill.blp")
+					t:SetAllPoints(z)
+					z.texture = t
+					z:Show()
+					keyManager.text:SetText(string.format("%s %d Keystone", GetZoneText(), keyLevel))
+					keyManager.timer:SetText(string.format("%d: %02d \nCurrent Percent: %d", timeRemaining / 60, timeRemaining % 60, currentPercent))
+				end
+			end
 		else
-			print("You have failed the keystone, try again next time!")
+			currZone = GetZoneText()
 		end
-	-- Make the UI Change to show the timer meter (Look at https://github.com/jordonwow/omnibar to figure it out)
-	else
-		f.text:SetText(string.format("%d : %d Remaining. Current Percent: %d", timeRemaining / 60, timeRemaining % 60, currentPercent))
-	end
-end)
+
+	end)
+end
+
+-- Key Manager
+local keyStarter = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
+keyStarter:SetPoint("LEFT")
+keyStarter:SetSize(350, 400)
+
+
+keyStarter.startButton = CreateFrame("Button", nil, keyStarter, "GameMenuButtonTemplate")
+keyStarter.startButton:SetPoint("BOTTOM", keyStarter, "BOTTOM", 0, 10)
+keyStarter.startButton:SetSize(200, 30)
+keyStarter.startButton:SetText("Start Key")
+keyStarter.startButton:SetNormalFontObject("GameFontNormalLarge")
+keyStarter.startButton:SetHighlightFontObject("GameFontHighlightLarge")
+keyStarter.startButton:Show()
+keyStarter:SetScript("OnClick", StartKey())
+print("We're here")
+keyStarter:Show()
+
 --[[
-	Notes and Plans
-	-- Add Options Panel with Custom % for each dungeon
+	General notes and plans
+	
+	-- Figure out how the fuck to use XML
+	-- Write better code
+	-- Add Variable Mob Percents (Modifiable in Game for certain keys)
+	-- Add Options Panel with Custom % sliders for each dungeon
 	-- Add Potential Affixes, some ides maybe:
 		-- Hitman: Specific Mobs are worth drastically more %, all other mobs are worth drastically less.
 		-- Spies in their Ranks: Specific Mobs reduce % instead of increase it, all other enemies get a minor buff.
