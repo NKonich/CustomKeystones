@@ -33,7 +33,7 @@ GD_Bosses = {"Slad'ran", "Drakkari Colossus", "Moorabi", "Gal'darah", "Eck the F
 
 -- Halls of Lightning Percentage Tables
 HOL = {"Hardened Steel Berserker", "Hardened Steel Reaver", "Hardened Steel Skycaller", "Stormforged Lieutenant", "Stormforged Mender", "Stormforged Tactician", "Blistering Steamrager", "Unbound Firestorm", "Titanium Siegebreaker", "Titanium Thunderer", "Storming Vortex", "Stormfury Revenant", "Stormforged Construct", "Stormforged Giant", "Stormforged Runeshaper", "Stormforged Sentinel", "Titanium Vanguard"}
-HOL_Values = {1.2, 1.3, 1.5, 1.4, 2.2, 2, 1.3, 2.7, 2, 1.2, 1.5, 2.4, 4.5, 6.7, 2.4, 2.2, 2}
+HOL_Values = {10, 13, 1.5, 1.4, 2.2, 2, 1.3, 2.7, 2, 1.2, 1.5, 2.4, 4.5, 6.7, 2.4, 2.2, 2}
 HOL_Bosses = {"General Bjarngrim", "Volkhan", "Ionar", "Loken"}
 
 -- Halls of Stone Percentage Tables
@@ -71,7 +71,9 @@ keyStarted = false
 keyLevel = 0
 currZone = GetZoneText()
 bossesKilled = 0
+currentPercent = 0
 maxBosses = 0
+highestKey = 0
 
 -- Helper functions
 local function Search(destName, mobs, bosses, values)
@@ -110,7 +112,6 @@ local function OnEvent(self, event, arg1)
 		currentPercent = currentPercent
 	end
 	if subevent == "PARTY_KILL" and keyStarted then
-		print(destName)
 		-- Crappy hard coded solution that works for now: Checks the zone and then runs through the tables.
 		if GetZoneText() == "Ahn'Kahet, The Old Kingdom" then
 			search(destName, AK, AK_Bosses, AK_Values)
@@ -155,10 +156,10 @@ keyManager.timerText:SetPoint("BOTTOM", keyManager, "BOTTOM", 0, 35)
 keyManager.timerText:SetText("Time Remaining:")
 
 -- Progress Bar Handlers
-keyManager.innerFrame = CreateFrame("Frame", nil, keyManager, "CastingBarFrameTemplate")
+keyManager.innerFrame = CreateFrame("Frame", nil, keyManager, "SmallCastingBarFrameTemplate")
 keyManager.innerFrame:SetPoint("CENTER", keyManager, "BOTTOM", 0, 60)
-keyManager.innerFrame:SetSize(200, 30)
-
+keyManager.innerFrame:SetSize(240, 30)
+keyManager.innerFrame:SetScript("OnUpdate", nil)
 -- Creates the correct texture.
 local z = CreateFrame("Frame",nil,keyManager.innerFrame)
 z:SetPoint("CENTER", keyManager.innerFrame, "CENTER", 0, 15)
@@ -192,145 +193,7 @@ end
 
 
 keyManager:Hide()
-function StartKey()
-	ResetClock()
-	keyManager:Show()
-	-- KeyManager's scripts to handle deaths and to update the clock/timers.
-	keyManager:SetScript("OnEvent", OnEvent)
-	keyManager:SetScript("OnUpdate", function(self, elapsed)
-		timeRemaining = timeRemaining - elapsed
-		-- Checks if player leaves or enters the dungeon.
-		if currZone == GetZoneText() then
-			if currZone == "Ahn'Kahet, The Old Kingdom" then
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Ahnkalet.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				keyManager.keyImage:Show()
-				maxBosses = table.getn(AK_Bosses)
-				keyStarted = true
-			elseif currZone == "Halls of Lightning" then
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGICON-HALLSOFLIGHTNING.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				keyManager.keyImage:Show()
-				maxBosses = table.getn(HOL_Bosses)
-				keyStarted = true
-			elseif currZone == "Halls of Stone" then
-				keyStarted = true
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-HallsofStone.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				keyManager.keyImage:Show()
-				maxBosses = table.getn(HOS_Bosses)
-				keystarted = true
-			elseif currZone == "The Oculus" then
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheOculus.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				keyManager.keyImage:Show()
-				maxBosses = table.getn(OC_Bosses)
-				keyStarted = true
-			elseif currZone == "The Nexus" then
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheNexus.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				keyManager.keyImage:Show()
-				maxBosses = table.getn(NX_Bosses)
-				keyStarted = true
-			elseif currZone == "Gundrak" then
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Gundrak.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				maxBosses = table.getn(GD_Bosses)
-				keyManager.keyImage:Show()
-			elseif currZone == "Drak'Tharon Keep" then
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				keyManager.keyImage:Show()
-				maxBosses = table.getn(DTK_Bosses)
-				keyStarted = true
-			elseif currZone == "Utgarde Pinnacle" then
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-UtgardePinnacle.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				keyManager.keyImage:Show()
-				maxBosses = table.getn(UP_Bosses)
-				keyStarted = true
-			elseif currZone == "Utgarde Keep" then
-				keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
-				keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
-				keyManager.keyImage:SetSize(100, 100)
-				local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
-				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Utgarde.blp")
-				y:SetAllPoints()
-				keyManager.keyImage.texture = y
-				keyManager.keyImage:Show()
-				maxBosses = table.getn(UK_Bosses)
-				keyStarted = true
-			else
-				keyStarted = false
-			end
-			if keyStarted == true then
-				keyManager.keyText:SetText(currZone)
-				keyManager.keySubtext:SetText(string.format("Bosses killed: %d/%d", bossesKilled, maxBosses))
-				keyManager.affixes:SetText("Affixes: None")
-				-- Show the end result and click to restart it
-				if timeRemaining <= 0 then
-					if currentPercent >= 100 then
-						print("You have completed the keystone, congratulations!")
-					else
-						print("You have failed the keystone, try again next time!")
-					end
-				-- Make the UI Change to show the timer meter (Look at https://github.com/jordonwow/omnibar to figure it out)
-				else
-					z:SetPoint("CENTER", keyManager.innerFrame, "LEFT", currentPercent + 5, 10)
-					z:SetSize(190 * ((currentPercent + .01) / 100), 10)
-					t:SetTexture("Interface\\GLUES\\LoadingBar\\Loading-BarFill.blp")
-					t:SetAllPoints(z)
-					z.texture = t
-					z:Show()
-					keyManager.text:SetText(string.format("%s %d Keystone", GetZoneText(), keyLevel))
-					keyManager.timer:SetText(string.format("%d: %02d \nCurrent Percent: %d", timeRemaining / 60, timeRemaining % 60, currentPercent))
-				end
-			end
-		else
-			currZone = GetZoneText()
-		end
-	end)
-end
+
 
 
 --[[ Core Menu for starting Keystones
@@ -344,14 +207,7 @@ local keyStarter = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithIn
 keyStarter:SetPoint("LEFT")
 keyStarter:SetSize(350, 400)
 
--- Start Key Button
-keyStarter.startButton = CreateFrame("Button", nil, keyStarter, "GameMenuButtonTemplate")
-keyStarter.startButton:SetPoint("BOTTOM", keyStarter, "BOTTOM", 0, 10)
-keyStarter.startButton:SetSize(200, 30)
-keyStarter.startButton:SetText("Start Key")
-keyStarter.startButton:SetNormalFontObject("GameFontNormalLarge")
-keyStarter.startButton:SetHighlightFontObject("GameFontHighlightLarge")
-keyStarter.startButton:SetScript("OnClick", StartKey)
+
 
 -- Selected Key String
 
@@ -363,7 +219,7 @@ keyStarter.ranked:SetText("Ranked Map Pool")
 keyStarter.ranked:Show()
 
 -- First Map
-keyStarter.firstRanked = CreateFrame("Button", nil, keyStarter)
+keyStarter.firstRanked = CreateFrame("Frame", nil, keyStarter)
 keyStarter.firstRanked:SetPoint("CENTER", keyStarter, "CENTER", 0, 100)
 keyStarter.firstRanked:SetSize(50, 50)
 local y = keyStarter.firstRanked:CreateTexture(nil, "OVERLAY")
@@ -372,7 +228,7 @@ y:SetAllPoints()
 keyStarter.firstRanked.texture = y
 keyStarter.firstRanked:Show()
 -- Second Map
-keyStarter.secondRanked = CreateFrame("Button", nil, keyStarter)
+keyStarter.secondRanked = CreateFrame("Frame", nil, keyStarter)
 keyStarter.secondRanked:SetPoint("CENTER", keyStarter, "CENTER", -60, 100)
 keyStarter.secondRanked:SetSize(50, 50)
 local y = keyStarter.secondRanked:CreateTexture(nil, "OVERLAY")
@@ -381,7 +237,7 @@ y:SetAllPoints()
 keyStarter.secondRanked.texture = y
 keyStarter.secondRanked:Show()
 -- Third Map
-keyStarter.thirdRanked = CreateFrame("Button", nil, keyStarter)
+keyStarter.thirdRanked = CreateFrame("Frame", nil, keyStarter)
 keyStarter.thirdRanked:SetPoint("CENTER", keyStarter, "CENTER", -120, 100)
 keyStarter.thirdRanked:SetSize(50, 50)
 local y = keyStarter.thirdRanked:CreateTexture(nil, "OVERLAY")
@@ -390,7 +246,7 @@ y:SetAllPoints()
 keyStarter.thirdRanked.texture = y
 keyStarter.thirdRanked:Show()
 -- Fourth Map
-keyStarter.fourthRanked = CreateFrame("Button", nil, keyStarter)
+keyStarter.fourthRanked = CreateFrame("Frame", nil, keyStarter)
 keyStarter.fourthRanked:SetPoint("CENTER", keyStarter, "CENTER", 60, 100)
 keyStarter.fourthRanked:SetSize(50, 50)
 local y = keyStarter.fourthRanked:CreateTexture(nil, "OVERLAY")
@@ -399,7 +255,7 @@ y:SetAllPoints()
 keyStarter.fourthRanked.texture = y
 keyStarter.fourthRanked:Show()
 -- Fifth Map
-keyStarter.fifthRanked = CreateFrame("Button", nil, keyStarter)
+keyStarter.fifthRanked = CreateFrame("Frame", nil, keyStarter)
 keyStarter.fifthRanked:SetPoint("CENTER", keyStarter, "CENTER", 120, 100)
 keyStarter.fifthRanked:SetSize(50, 50)
 local y = keyStarter.fifthRanked:CreateTexture(nil, "OVERLAY")
@@ -414,41 +270,220 @@ keyStarter.unranked:SetPoint("BOTTOM", keyStarter, "BOTTOM", 0, 60)
 keyStarter.unranked:SetText("Unranked Map Pool")
 keyStarter.unranked:Show()
 
+keyStarter.location = keyStarter:CreateFontString(nil, "OVERLAY", "QuestFont_Enormous")
+keyStarter.location:SetPoint("CENTER", keyStarter, "CENTER", 0, 20)
+keyStarter.location:SetText("Current Location")
+keyStarter.location:Show()
+keyStarter.locationText = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontWhiteSmall")
+keyStarter.locationText:SetPoint("CENTER", keyStarter, "CENTER", 0, 0)
+
+keyStarter.locationValidity = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontWhiteSmall")
+keyStarter.locationValidity:SetPoint("CENTER", keyStarter, "CENTER", 0, -15)
+
+keyStarter.locationHighest = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+keyStarter.locationHighest:SetPoint("CENTER", keyStarter, "CENTER", 0, - 30)
+keyStarter:SetScript("OnUpdate", function(self, elapsed)
+	keyStarter.locationText:SetText(string.format("%s", GetZoneText()))
+	keyStarter.locationText:Show()
+	if GetZoneText() == "Utgarde Pinnacle" or GetZoneText() == "The Nexus" or GetZoneText() == "Drak'Tharon Keep" or GetZoneText() == "Ahn'kahet: The Old Kingdom" or GetZoneText() == "Halls of Lightning" then
+		keyStarter.locationValidity:SetText("Ranked Key")
+		keyStarter.locationValidity:Show()
+		keyStarter.locationHighest:SetText(string.format("Key Level: %d", highestKey))
+		keyStarter.locationHighest:Show()
+	elseif GetZoneText() == "Halls of Stone" or GetZoneText() == "The Oculus" or GetZoneText() == "Utgarde Keep" or GetZoneText() == "Gundrak" then	
+		keyStarter.locationValidity:SetText("Unranked Key")
+		keyStarter.locationValidity:Show()
+		keyStarter.locationHighest:Hide()
+	else
+		keyStarter.locationValidity:SetText("Invalid Location")
+		keyStarter.locationValidity:Show()
+		keyStarter.locationHighest:Hide()
+	end
+end)
+
 -- First Map
-keyStarter.firstRanked = CreateFrame("Button", nil, keyStarter)
-keyStarter.firstRanked:SetPoint("CENTER", keyStarter, "CENTER", 0, -80)
-keyStarter.firstRanked:SetSize(50, 50)
-local y = keyStarter.firstRanked:CreateTexture(nil, "OVERLAY")
+keyStarter.firstUnranked = CreateFrame("Frame", nil, keyStarter)
+keyStarter.firstUnranked:SetPoint("CENTER", keyStarter, "CENTER", 0, -80)
+keyStarter.firstUnranked:SetSize(50, 50)
+local y = keyStarter.firstUnranked:CreateTexture(nil, "OVERLAY")
 y:SetTexture("Interface\\LFGFRAME\\LFGIcon-DrakTharon.blp")
 y:SetAllPoints()
-keyStarter.firstRanked.texture = y
-keyStarter.firstRanked:Show()
+keyStarter.firstUnranked.texture = y
 -- Second Map
-keyStarter.secondRanked = CreateFrame("Button", nil, keyStarter)
-keyStarter.secondRanked:SetPoint("CENTER", keyStarter, "CENTER", -60, -80)
-keyStarter.secondRanked:SetSize(50, 50)
-local y = keyStarter.secondRanked:CreateTexture(nil, "OVERLAY")
+keyStarter.secondUnranked = CreateFrame("Frame", nil, keyStarter)
+keyStarter.secondUnranked:SetPoint("CENTER", keyStarter, "CENTER", -60, -80)
+keyStarter.secondUnranked:SetSize(50, 50)
+local y = keyStarter.secondUnranked:CreateTexture(nil, "OVERLAY")
 y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheOculus.blp")
 y:SetAllPoints()
-keyStarter.secondRanked.texture = y
-keyStarter.secondRanked:Show()
+keyStarter.secondUnranked.texture = y
 -- Third Map
-keyStarter.thirdRanked = CreateFrame("Button", nil, keyStarter)
-keyStarter.thirdRanked:SetPoint("CENTER", keyStarter, "CENTER", 60, -80)
-keyStarter.thirdRanked:SetSize(50, 50)
-local y = keyStarter.thirdRanked:CreateTexture(nil, "OVERLAY")
+keyStarter.thirdUnranked = CreateFrame("Frame", nil, keyStarter)
+keyStarter.thirdUnranked:SetPoint("CENTER", keyStarter, "CENTER", 60, -80)
+keyStarter.thirdUnranked:SetSize(50, 50)
+local y = keyStarter.thirdUnranked:CreateTexture(nil, "OVERLAY")
 y:SetTexture("Interface\\LFGFRAME\\LFGIcon-HallsOfStone.blp")
 y:SetAllPoints()
-keyStarter.thirdRanked.texture = y
-keyStarter.thirdRanked:Show()
+keyStarter.thirdUnranked.texture = y
 
+function StartKey()
+	ResetClock()
+	keyManager:Show()
+	-- KeyManager's scripts to handle deaths and to update the clock/timers.
+	keyManager:SetScript("OnEvent", OnEvent)
+	keyManager:SetScript("OnUpdate", function(self, elapsed)
+		timeRemaining = timeRemaining - elapsed
+		-- Checks if player leaves or enters the dungeon.
+		if GetZoneText() == "Ahn'Kahet, The Old Kingdom" then
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Ahnkalet.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			keyManager.keyImage:Show()
+			maxBosses = table.getn(AK_Bosses)
+			keyStarted = true
+		elseif GetZoneText() == "Halls of Lightning" then
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGICON-HALLSOFLIGHTNING.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			keyManager.keyImage:Show()
+			maxBosses = table.getn(HOL_Bosses)
+			keyStarted = true
+		elseif GetZoneText() == "Halls of Stone" then
+			keyStarted = true
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGIcon-HallsofStone.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			keyManager.keyImage:Show()
+			maxBosses = table.getn(HOS_Bosses)
+			keystarted = true
+		elseif GetZoneText() == "The Oculus" then
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheOculus.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			keyManager.keyImage:Show()
+			maxBosses = table.getn(OC_Bosses)
+			keyStarted = true
+		elseif GetZoneText() == "The Nexus" then
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheNexus.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			keyManager.keyImage:Show()
+			maxBosses = table.getn(NX_Bosses)
+			keyStarted = true
+		elseif GetZoneText() == "Gundrak" then
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Gundrak.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			maxBosses = table.getn(GD_Bosses)
+			keyManager.keyImage:Show()
+		elseif GetZoneText() == "Drak'Tharon Keep" then
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGIcon-.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			keyManager.keyImage:Show()
+			maxBosses = table.getn(DTK_Bosses)
+			keyStarted = true
+		elseif GetZoneText() == "Utgarde Pinnacle" then
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGIcon-UtgardePinnacle.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			keyManager.keyImage:Show()
+			maxBosses = table.getn(UP_Bosses)
+			keyStarted = true
+		elseif GetZoneText() == "Utgarde Keep" then
+			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
+			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
+			keyManager.keyImage:SetSize(100, 100)
+			local y = keyManager.keyImage:CreateTexture(nil, "OVERLAY")
+			y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Utgarde.blp")
+			y:SetAllPoints()
+			keyManager.keyImage.texture = y
+			keyManager.keyImage:Show()
+			maxBosses = table.getn(UK_Bosses)
+			keyStarted = true
+		else
+			keyStarted = false
+		end
+		if keyStarted then
+			keyManager.keyText:SetText(currZone)
+			keyManager.keySubtext:SetText(string.format("Bosses killed: %d/%d", bossesKilled, maxBosses))
+			keyManager.affixes:SetText("Affixes: None")
+			-- Show the end result and click to restart it
+			if timeRemaining <= 0 then
+				if currentPercent >= 100 and bossesKilled == maxBosses then
+					print("You have completed the keystone, congratulations!")
+				else
+					print("You have failed the keystone, try again next time!")
+				end
+			-- Make the UI Change to show the timer meter (Look at https://github.com/jordonwow/omnibar to figure it out)
+			else
+				z:SetPoint("CENTER", keyManager.innerFrame, "LEFT", currentPercent+15, 10)
+				z:SetSize(200 * math.min(1, ((currentPercent + .01) / 100)), 10)
+				t:SetTexture("Interface\\GLUES\\LoadingBar\\Loading-BarFill.blp")
+				t:SetAllPoints(z)
+				z.texture = t
+				z:Show()
+				keyManager.text:SetText(string.format("%s %d Keystone", GetZoneText(), keyLevel))
+				keyManager.timer:SetText(string.format("%d: %02d \nCurrent Percent: %d", timeRemaining / 60, timeRemaining % 60, currentPercent))
+				keyStarter:Hide()
+			end
+		else
+			keyManager:Hide()
+		end
+	end)
+end
+
+-- Start Key Button
+keyStarter.startButton = CreateFrame("Button", nil, keyStarter, "GameMenuButtonTemplate")
+keyStarter.startButton:SetPoint("BOTTOM", keyStarter, "BOTTOM", 0, 10)
+keyStarter.startButton:SetSize(200, 30)
+keyStarter.startButton:SetText("Start Key")
+keyStarter.startButton:SetNormalFontObject("GameFontNormalLarge")
+keyStarter.startButton:SetHighlightFontObject("GameFontHighlightLarge")
+keyStarter.startButton:SetScript("OnClick", StartKey)
 
 -- Slash commands
 SLASH_CK1 = "/ck"
 SLASH_CK2 = "/customkeystones"
 SLASH_CK3 = "/customkeys"
 function SlashCmdList.CK(msg, editbox)
-	keyStarter:Show()
+	if keyStarted then
+		keyManager:Show()
+	else
+		keyStarter:Show()
+	end
 end
 --[[
 	General notes and plans
