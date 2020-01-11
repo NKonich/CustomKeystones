@@ -1,4 +1,3 @@
-print('Hello World!')
 --[[
 	WotLK M+ Dungeon Set TODO: Add boss tables
 		-Ahn'Kahet, the Old Kingdom
@@ -33,12 +32,12 @@ GD_Bosses = {"Slad'ran", "Drakkari Colossus", "Moorabi", "Gal'darah", "Eck the F
 
 -- Halls of Lightning Percentage Tables
 HOL = {"Hardened Steel Berserker", "Hardened Steel Reaver", "Hardened Steel Skycaller", "Stormforged Lieutenant", "Stormforged Mender", "Stormforged Tactician", "Blistering Steamrager", "Unbound Firestorm", "Titanium Siegebreaker", "Titanium Thunderer", "Storming Vortex", "Stormfury Revenant", "Stormforged Construct", "Stormforged Giant", "Stormforged Runeshaper", "Stormforged Sentinel", "Titanium Vanguard"}
-HOL_Values = {10, 13, 1.5, 1.4, 2.2, 2, 1.3, 2.7, 2, 1.2, 1.5, 2.4, 4.5, 6.7, 2.4, 2.2, 2}
+HOL_Values = {1.2, 1.3, 1.5, 1.4, 2.2, 2, 1.3, 2.7, 2, 1.2, 1.5, 2.4, 4.5, 6.7, 2.4, 2.2, 2}
 HOL_Bosses = {"General Bjarngrim", "Volkhan", "Ionar", "Loken"}
 
 -- Halls of Stone Percentage Tables
 HOS = {"Crystalline Shardling", "Dark Rune Controller", "Dark Rune Elementalist", "Dark Rune Giant", "Dark Rune Scholar", "Dark Rune Shaper", "Dark Rune Theurgist", "Dark Rune Warrior", "Dark Rune Worker", "Lightning Construct", "Raging Construct", "Unrelenting Construct"}
-HOS_Values = {.1, 1.2, 4.2, 1.8, 1.7, 1.6, 1.5, 1.3, 4, 4, 4}
+HOS_Values = {.2, 1.2, 1.4, 7, 1.7, 1.6, 1.5, 1.3, 1.7, 3.4, 3.3, 3.2}
 HOS_Bosses = {"Maiden of Grief", "Krystallus", "Sjonnir The Ironshaper"}
 
 -- The Nexus Percentage Tables
@@ -67,27 +66,10 @@ RANKED_MAPS = {UP, DTK, HOL, AK, GD, NX}
 -- Default Key Rules
 timeRemaining = 1800 -- Default to 30 minute times.
 timeLimit = 1800
-keyStarted = false
 keyLevel = 0
-currZone = GetZoneText()
-bossesKilled = 0
-currentPercent = 0
 maxBosses = 0
 highestKey = 0
 
--- Helper functions
-local function Search(destName, mobs, bosses, values)
-	for i=1,table.getn(mobs) do
-		if mobs[i] == destName then
-			currentPercent = currentPercent + values[i]
-		end
-	end
-	for i =1,table.getn(bosses) do
-		if bosses[i] == destName then
-			bossesKilled = bossesKilled + 1
-		end
-	end
-end
 
 local function OnKeyStart(level, mobs, values, bosses)
 	local killsNeeded = table.getn(bosses)
@@ -101,19 +83,26 @@ local function ResetClock()
 end
 
 
-local function OnEvent(self, event, arg1)
-	local timestamp, subevent, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
-	if event == "ADDON_LOADED" and arg1 == "CustomKeystones" then
-		if currentPercent == nil then
-			currentPercent = 0
+
+-- Helper functions
+local function Search(destName, mobs, bosses, values)
+	for i=1,table.getn(mobs) do
+		if mobs[i] == destName then
+			currentPercent = currentPercent + values[i]
 		end
 	end
-	if event == "PLAYER_LOGOUT" then
-		currentPercent = currentPercent
+	for i =1,table.getn(bosses) do
+		if bosses[i] == destName then
+			bossesDowned = bossesDowned + 1
+		end
 	end
+end
+
+local function OnEvent(self, event, arg1)
+	local timestamp, subevent, _, sourceGUID, sourceName, sourceFlags, sourceRaidFlags, destGUID, destName, destFlags, destRaidFlags = CombatLogGetCurrentEventInfo()
 	if subevent == "PARTY_KILL" and keyStarted then
 		-- Crappy hard coded solution that works for now: Checks the zone and then runs through the tables.
-		if GetZoneText() == "Ahn'Kahet, The Old Kingdom" then
+		if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
 			search(destName, AK, AK_Bosses, AK_Values)
 		elseif GetZoneText() == "The Nexus" then
 			search(destName, NX, NX_Bosses, NX_Values)
@@ -134,6 +123,8 @@ local function OnEvent(self, event, arg1)
 		end
 	end
 end
+
+
 
 --[[ Core Frame for the Keystone
 	Clean up the time function so it continues even with the menu frame closed.
@@ -169,9 +160,6 @@ t:SetTexture("Interface\\GLUES\\LoadingBar\\Loading-BarFill.blp")
 t:SetAllPoints(z)
 z.texture = t
 z:Show()
-if currentPercent == nil then
-	currentPercent = 0
-end
 -- Handles the Dungeon Image and text above the image.
 keyManager.keyText = keyManager:CreateFontString(nil, "OVERLAY", "QuestFont_Enormous")
 keyManager.keyText:SetPoint("CENTER", keyManager, "CENTER", 0, 100)
@@ -266,7 +254,7 @@ keyStarter.fifthRanked:Show()
 
 -- Unranked Season Key Icons
 keyStarter.unranked = keyStarter:CreateFontString(nil, "OVERLAY", "QuestFont_Enormous")
-keyStarter.unranked:SetPoint("BOTTOM", keyStarter, "BOTTOM", 0, 60)
+keyStarter.unranked:SetPoint("BOTTOM", keyStarter, "BOTTOM", 0, 50)
 keyStarter.unranked:SetText("Unranked Map Pool")
 keyStarter.unranked:Show()
 
@@ -283,14 +271,14 @@ keyStarter.locationValidity:SetPoint("CENTER", keyStarter, "CENTER", 0, -15)
 keyStarter.locationHighest = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 keyStarter.locationHighest:SetPoint("CENTER", keyStarter, "CENTER", 0, - 30)
 keyStarter:SetScript("OnUpdate", function(self, elapsed)
-	keyStarter.locationText:SetText(string.format("%s", GetZoneText()))
+	keyStarter.locationText:SetText(GetZoneText())
 	keyStarter.locationText:Show()
-	if GetZoneText() == "Utgarde Pinnacle" or GetZoneText() == "The Nexus" or GetZoneText() == "Drak'Tharon Keep" or GetZoneText() == "Ahn'kahet: The Old Kingdom" or GetZoneText() == "Halls of Lightning" then
+	if GetZoneText() == "Utgarde Pinnacle" or GetZoneText() == "The Nexus" or GetZoneText() == "Gundrak" or GetZoneText() == "Ahn'kahet: The Old Kingdom" or GetZoneText() == "Halls of Lightning" then
 		keyStarter.locationValidity:SetText("Ranked Key")
 		keyStarter.locationValidity:Show()
 		keyStarter.locationHighest:SetText(string.format("Key Level: %d", highestKey))
 		keyStarter.locationHighest:Show()
-	elseif GetZoneText() == "Halls of Stone" or GetZoneText() == "The Oculus" or GetZoneText() == "Utgarde Keep" or GetZoneText() == "Gundrak" then	
+	elseif GetZoneText() == "Halls of Stone" or GetZoneText() == "The Oculus" or GetZoneText() == "Utgarde Keep" or GetZoneText() == "Drak'Tharon Keep" then	
 		keyStarter.locationValidity:SetText("Unranked Key")
 		keyStarter.locationValidity:Show()
 		keyStarter.locationHighest:Hide()
@@ -303,7 +291,7 @@ end)
 
 -- First Map
 keyStarter.firstUnranked = CreateFrame("Frame", nil, keyStarter)
-keyStarter.firstUnranked:SetPoint("CENTER", keyStarter, "CENTER", 0, -80)
+keyStarter.firstUnranked:SetPoint("CENTER", keyStarter, "CENTER", 0, -90)
 keyStarter.firstUnranked:SetSize(50, 50)
 local y = keyStarter.firstUnranked:CreateTexture(nil, "OVERLAY")
 y:SetTexture("Interface\\LFGFRAME\\LFGIcon-DrakTharon.blp")
@@ -311,7 +299,7 @@ y:SetAllPoints()
 keyStarter.firstUnranked.texture = y
 -- Second Map
 keyStarter.secondUnranked = CreateFrame("Frame", nil, keyStarter)
-keyStarter.secondUnranked:SetPoint("CENTER", keyStarter, "CENTER", -60, -80)
+keyStarter.secondUnranked:SetPoint("CENTER", keyStarter, "CENTER", -60, -90)
 keyStarter.secondUnranked:SetSize(50, 50)
 local y = keyStarter.secondUnranked:CreateTexture(nil, "OVERLAY")
 y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheOculus.blp")
@@ -319,22 +307,56 @@ y:SetAllPoints()
 keyStarter.secondUnranked.texture = y
 -- Third Map
 keyStarter.thirdUnranked = CreateFrame("Frame", nil, keyStarter)
-keyStarter.thirdUnranked:SetPoint("CENTER", keyStarter, "CENTER", 60, -80)
+keyStarter.thirdUnranked:SetPoint("CENTER", keyStarter, "CENTER", 60, -90)
 keyStarter.thirdUnranked:SetSize(50, 50)
 local y = keyStarter.thirdUnranked:CreateTexture(nil, "OVERLAY")
 y:SetTexture("Interface\\LFGFRAME\\LFGIcon-HallsOfStone.blp")
 y:SetAllPoints()
 keyStarter.thirdUnranked.texture = y
+keyStarter:Show()
+
+keyStarter:RegisterEvent("ADDON_LOADED")
+keyStarter:RegisterEvent("PLAYER_LOGOUT")
+keyStarter.ioLabel = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
+keyStarter.ioLabel:SetPoint("CENTER", keyStarter, "CENTER", 0, 60)
+keyStarter.ioText = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+keyStarter.ioText:SetPoint("CENTER", keyStarter, "CENTER", 0, 45)
+keyStarter.ioLabel:SetText("IO Score:")
+keyStarter:SetScript("OnEvent", function(self, event, arg1)
+	if event == "ADDON_LOADED" and arg1 == "CustomKeystones" then
+		if highestUP == nil then
+			highestUP = 0
+		end
+		if highestAK == nil then
+			highestAK = 0
+		end
+		if highestGD == nil then
+			highestGD = 0
+		end
+		if highestHOL == nil then
+			highestHOL = 0
+		end
+		if highestNX == nil then
+			highestNX = 0
+		end
+		keyStarter.ioText:SetText(string.format("%d", (highestAK + highestGD + highestHOL + highestNX + highestUP) * 50))
+	end	
+end)
+
+
+
 
 function StartKey()
-	ResetClock()
 	keyManager:Show()
 	-- KeyManager's scripts to handle deaths and to update the clock/timers.
 	keyManager:SetScript("OnEvent", OnEvent)
 	keyManager:SetScript("OnUpdate", function(self, elapsed)
+		if currentPercent == nil then
+			currentPercent = 0
+		end
 		timeRemaining = timeRemaining - elapsed
 		-- Checks if player leaves or enters the dungeon.
-		if GetZoneText() == "Ahn'Kahet, The Old Kingdom" then
+		if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
 			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
 			keyManager.keyImage:SetSize(100, 100)
@@ -437,19 +459,40 @@ function StartKey()
 			keyStarted = false
 		end
 		if keyStarted then
-			keyManager.keyText:SetText(currZone)
-			keyManager.keySubtext:SetText(string.format("Bosses killed: %d/%d", bossesKilled, maxBosses))
+			keyManager.keyText:SetText(GetZoneText())
+			keyManager.keySubtext:SetText(string.format("Bosses killed: %d/%d", bossesDowned, maxBosses))
 			keyManager.affixes:SetText("Affixes: None")
+			
 			-- Show the end result and click to restart it
 			if timeRemaining <= 0 then
-				if currentPercent >= 100 and bossesKilled == maxBosses then
+				if currentPercent >= 100 and bossesDowned == maxBosses then
 					print("You have completed the keystone, congratulations!")
+					if GetZoneText() == "Ahn'Kahet: Old Kingdom" then
+						highestAK = max(1, highestAK + 1)
+					end
+					if GetZoneText() == "Halls of Lightning" then
+						highestHOL = max(1, highestHOL + 1)
+					end
+					if GetZoneText() == "Utgarde Pinnacle" then
+						highestUP = max(1, highestUP + 1)
+					end
+					if GetZoneText() == "The Nexus" then
+						highestNX = max(1, highestNX + 1)
+					end
+					if GetZoneText() == "Gundrak" then
+						highestGD = max(1, highestGD + 1)
+					end
+					-- TODO: Add victory screen and give user IO.
+					keyStarter.Show()
+					keyManager.Hide()
 				else
 					print("You have failed the keystone, try again next time!")
+					keyStarter.Show()
+					keyManager.Hide()
 				end
 			-- Make the UI Change to show the timer meter (Look at https://github.com/jordonwow/omnibar to figure it out)
 			else
-				z:SetPoint("CENTER", keyManager.innerFrame, "LEFT", currentPercent+15, 10)
+				z:SetPoint("CENTER", keyManager.innerFrame, "LEFT", currentPercent + 20, 10)
 				z:SetSize(200 * math.min(1, ((currentPercent + .01) / 100)), 10)
 				t:SetTexture("Interface\\GLUES\\LoadingBar\\Loading-BarFill.blp")
 				t:SetAllPoints(z)

@@ -3,7 +3,7 @@
 ## Author: Nicholas Konich
 ## DefaultState: enabled
 ## Version: 1
-## SavedVariables: PlayerMeta
-## SavedVariablesPerCharacter: currentPercent
+## SavedVariables: bossesDowned
+## SavedVariablesPerCharacter: highestUP, highestAK, highestGD, highestHOL, highestNX
 
 main.lua
