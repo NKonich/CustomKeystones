@@ -26,10 +26,15 @@ Pet kills currently DO NOT count towards % or bosses, working on a fix.
 
 Roadmap
 -------------
-  -> Custom Sliders
   
-  -> IO System
+  -> Barebones IO System
   
   -> "Affixes"
   
+  -> Custom Sliders
+
   -> Season 2
+
+  -> Rework IO System
+
+  -> More affixes?
