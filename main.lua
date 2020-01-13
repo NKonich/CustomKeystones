@@ -66,7 +66,6 @@ RANKED_MAPS = {UP, DTK, HOL, AK, GD, NX}
 -- Default Key Rules
 timeRemaining = 1800 -- Default to 30 minute times.
 timeLimit = 1800
-keyLevel = 0
 maxBosses = 0
 highestKey = 0
 
@@ -130,7 +129,7 @@ end
 	Clean up the time function so it continues even with the menu frame closed.
 
 ]]
-local keyManager = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
+keyManager = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
 keyManager:SetPoint("LEFT")
 keyManager:SetSize(250, 300)
 
@@ -268,21 +267,94 @@ keyStarter.locationText:SetPoint("CENTER", keyStarter, "CENTER", 0, 0)
 keyStarter.locationValidity = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontWhiteSmall")
 keyStarter.locationValidity:SetPoint("CENTER", keyStarter, "CENTER", 0, -15)
 
+-- Loads all of the data for the highestKey for a given character.
+keyStarter:SetScript("OnEvent", function(self, event, arg1)
+	if event == "ADDON_LOADED" and arg1 == "CustomKeystones" then
+		if highestUP == nil then
+			highestUP = 0
+		end
+		if highestAK == nil then
+			highestAK = 0
+		end
+		if highestGD == nil then
+			highestGD = 0
+		end
+		if highestHOL == nil then
+			highestHOL = 0
+		end
+		if highestNX == nil then
+			highestNX = 0
+		end
+		-- Currently non-complex. Will factor in time next addon patch.
+		keyStarter.ioText:SetText(string.format("%d", (highestAK + highestGD + highestHOL + highestNX + highestUP) * 50))
+	end	
+end)
+
+-- Increase or Decrease the key's difficulty using these two buttons.
+keyStarter.levelUpButton = CreateFrame("Button", nil, keyStarter, "GameMenuButtonTemplate")
+keyStarter.levelUpButton:SetPoint("CENTER", keyStarter, "CENTER", 50, -30)
+keyStarter.levelUpButton:SetSize(20, 20)
+keyStarter.levelUpButton:SetText("+")
+keyStarter.levelUpButton:SetNormalFontObject("GameFontNormalLarge")
+keyStarter.levelUpButton:SetHighlightFontObject("GameFontHighlightLarge")
+keyStarter.levelUpButton:SetScript("OnClick", function()
+	if not (highestKey > math.max(highestAK, highestGD, highestHOL, highestNX, highestUP)) then
+		highestKey = math.min(10, highestKey + 1)
+	end
+end)
+keyStarter.levelDownButton = CreateFrame("Button", nil, keyStarter, "GameMenuButtonTemplate")
+keyStarter.levelDownButton:SetPoint("CENTER", keyStarter, "CENTER", -50, -30)
+keyStarter.levelDownButton:SetSize(20, 20)
+keyStarter.levelDownButton:SetText("-")
+keyStarter.levelDownButton:SetNormalFontObject("GameFontNormalLarge")
+keyStarter.levelDownButton:SetHighlightFontObject("GameFontHighlightLarge")
+keyStarter.levelDownButton:SetScript("OnClick", function()
+	highestKey = math.max(0, highestKey - 1)
+end)
+
+-- Check if the player has changed to a knew area.
+local zoneChanged = true
 keyStarter.locationHighest = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
 keyStarter.locationHighest:SetPoint("CENTER", keyStarter, "CENTER", 0, - 30)
 keyStarter:SetScript("OnUpdate", function(self, elapsed)
 	keyStarter.locationText:SetText(GetZoneText())
 	keyStarter.locationText:Show()
-	if GetZoneText() == "Utgarde Pinnacle" or GetZoneText() == "The Nexus" or GetZoneText() == "Gundrak" or GetZoneText() == "Ahn'kahet: The Old Kingdom" or GetZoneText() == "Halls of Lightning" then
+	currZone = GetZoneText()
+	
+	-- Allow players to adjust key difficulty.
+	if currZone == "Utgarde Pinnacle" or currZone == "The Nexus" or currZone == "Gundrak" or currZone == "Ahn'kahet: The Old Kingdom" or currZone == "Halls of Lightning" then
 		keyStarter.locationValidity:SetText("Ranked Key")
 		keyStarter.locationValidity:Show()
 		keyStarter.locationHighest:SetText(string.format("Key Level: %d", highestKey))
 		keyStarter.locationHighest:Show()
-	elseif GetZoneText() == "Halls of Stone" or GetZoneText() == "The Oculus" or GetZoneText() == "Utgarde Keep" or GetZoneText() == "Drak'Tharon Keep" then	
+		-- Check the highest level a player has completed once.
+		if zoneChanged then
+
+			if GetZoneText() == "Utgarde Pinnacle"  then
+				highestKey = highestUP
+				zoneChanged = false
+			elseif GetZoneText() == "Ahn'kahet: The Old Kingdom" then
+				highestKey = highestAK
+				zoneChanged = false
+			elseif GetZoneText() == "Halls of Lightning" then
+				highestKey = highestHOL
+				zoneChanged = false
+			elseif GetZoneText() == "The Nexus" then
+				highestKey = highestNX
+				zoneChanged = false
+			elseif GetZoneText() == "Gundrak" then
+				highestKey = highestGD
+				zoneChanged = false
+			end
+		end
+	elseif GetZoneText() == "Halls of Stone" or GetZoneText() == "The Oculus" or GetZoneText() == "Utgarde Keep" or GetZoneText() == "Drak'Tharon Keep" then
+		highestKey = 0
 		keyStarter.locationValidity:SetText("Unranked Key")
 		keyStarter.locationValidity:Show()
 		keyStarter.locationHighest:Hide()
+	-- Resets the check if players leave the dungeon.
 	else
+		zoneChanged = true
 		keyStarter.locationValidity:SetText("Invalid Location")
 		keyStarter.locationValidity:Show()
 		keyStarter.locationHighest:Hide()
@@ -322,31 +394,12 @@ keyStarter.ioLabel:SetPoint("CENTER", keyStarter, "CENTER", 0, 60)
 keyStarter.ioText = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 keyStarter.ioText:SetPoint("CENTER", keyStarter, "CENTER", 0, 45)
 keyStarter.ioLabel:SetText("IO Score:")
-keyStarter:SetScript("OnEvent", function(self, event, arg1)
-	if event == "ADDON_LOADED" and arg1 == "CustomKeystones" then
-		if highestUP == nil then
-			highestUP = 0
-		end
-		if highestAK == nil then
-			highestAK = 0
-		end
-		if highestGD == nil then
-			highestGD = 0
-		end
-		if highestHOL == nil then
-			highestHOL = 0
-		end
-		if highestNX == nil then
-			highestNX = 0
-		end
-		keyStarter.ioText:SetText(string.format("%d", (highestAK + highestGD + highestHOL + highestNX + highestUP) * 50))
-	end	
-end)
 
 
 
 
-function StartKey()
+-- This is called when the "Start Key" button is hit, it shows the keyManager (manages active keys) and handles setting the onUpdate method for the keyManager.
+local function StartKey()
 	keyManager:Show()
 	-- KeyManager's scripts to handle deaths and to update the clock/timers.
 	keyManager:SetScript("OnEvent", OnEvent)
@@ -356,6 +409,7 @@ function StartKey()
 		end
 		timeRemaining = timeRemaining - elapsed
 		-- Checks if player leaves or enters the dungeon.
+		-- This can potentially all be moved into the OnEvent method during start-up.
 		if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
 			keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 			keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -467,20 +521,30 @@ function StartKey()
 			if timeRemaining <= 0 then
 				if currentPercent >= 100 and bossesDowned == maxBosses then
 					print("You have completed the keystone, congratulations!")
-					if GetZoneText() == "Ahn'Kahet: Old Kingdom" then
-						highestAK = max(1, highestAK + 1)
+					if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
+						if highestKey > highestAK then
+							highestAK = highestAK + 1
+						end
 					end
 					if GetZoneText() == "Halls of Lightning" then
-						highestHOL = max(1, highestHOL + 1)
+						if highestKey > highestHOL then
+							highestHOL = highestHOL + 1
+						end
 					end
 					if GetZoneText() == "Utgarde Pinnacle" then
-						highestUP = max(1, highestUP + 1)
+						if highestKey > highestNX then
+							highestUP = highestUP + 1
+						end
 					end
 					if GetZoneText() == "The Nexus" then
-						highestNX = max(1, highestNX + 1)
+						if highestKey > highestNX then
+							highestNX = highestNX + 1
+						end
 					end
 					if GetZoneText() == "Gundrak" then
-						highestGD = max(1, highestGD + 1)
+						if highestKey > highestGD then
+							highestGD = highestGD + 1
+						end
 					end
 					-- TODO: Add victory screen and give user IO.
 					keyStarter.Show()
@@ -498,7 +562,7 @@ function StartKey()
 				t:SetAllPoints(z)
 				z.texture = t
 				z:Show()
-				keyManager.text:SetText(string.format("%s %d Keystone", GetZoneText(), keyLevel))
+				keyManager.text:SetText(string.format("%s %d Keystone", GetZoneText(), highestKey))
 				keyManager.timer:SetText(string.format("%d: %02d \nCurrent Percent: %d", timeRemaining / 60, timeRemaining % 60, currentPercent))
 				keyStarter:Hide()
 			end

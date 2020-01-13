@@ -12,10 +12,17 @@ Utgarde Pinnacle, Halls of Lightning, The Nexus, Ahn'Kahet, Pit of Saron
 
 Utgarde Keep, Halls of Stone, The Oculus, Drak'Tharon Keep, Gundrak     
 
+
 Seasons 3 & 4
 -------------
 ?????
 
+Usage/Tips/Bugs
+------------
+If you close all the windows type "/ck", "/customkeystones" "/customkeys" to bring up either the active key or the main menu.
+Closing an active key menu is cheating currently as time stops when you close the window.
+	-Obviously I'm not the police and can't moderate this, but it's for fun so idk why you would cheat. (Will be bugfixed soon)
+Pet kills currently DO NOT count towards % or bosses, working on a fix.
 
 Roadmap
 -------------
