@@ -96,7 +96,7 @@ local function Search(destName, mobs, bosses, values)
 		if mobs[i] == destName then
 			if highestKey >= 6 then
 				if cleaveSpree > 0 then
-					currentPercent = currentPercent + values[i] * .65 + .1 * (killsInCleave / 2)
+					currentPercent = currentPercent + values[i] * .35 + .3 * (killsInCleave / 2)
 					killsInCleave = killsInCleave + 1
 				else
 					killsInCleave = 1
@@ -559,7 +559,7 @@ local function StartKey()
 		if currentPercent == nil then
 			currentPercent = 0
 		end
-		timeRemaining = timeRemaining - elapsed
+		timeRemaining = math.min(0, timeRemaining - elapsed)
 		-- Checks if player leaves or enters the dungeon.
 		-- This can potentially all be moved into the OnEvent method during start-up.
 		

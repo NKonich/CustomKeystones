@@ -1,4 +1,4 @@
-## Interface: 83000
+## Interface: 80300
 ## Title: Custom Keystones
 ## Author: Nicholas Konich
 ## DefaultState: enabled
@@ -6,4 +6,4 @@
 ## SavedVariables: bossesDowned
 ## SavedVariablesPerCharacter: highestUP, highestAK, highestGD, highestHOL, highestNX
 
-customkeystones.lua
+customKeystones.lua
