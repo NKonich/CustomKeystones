@@ -23,8 +23,6 @@ If you close all the windows type "/ck", "/customkeystones" "/customkeys" to bri
 
 Closing an active key menu is cheating currently as time stops when you close the window.
 	-Obviously I'm not the police and can't moderate this, but it's for fun so idk why you would cheat. (Will be bugfixed soon)
-	
-Pet kills currently DO NOT count towards % or bosses, working on a fix.
 
 Roadmap
 -------------
