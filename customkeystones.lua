@@ -15,7 +15,8 @@
 ]]
 -- Classic Dungeons
 -- Blackrock Depths Tables
--- 21 Mob Types - 11? Bosses
+-- 21 Mob Types - 11? Bosses (Will require major overhaul before release.)
+--[[
 BD = {"Anvilrage Footman", "Anvilrage Guardsman", "Anvilrage Overseer", "Anvilrage Warden", "Blazing Fireguard", "Bloodhound", "Twilight's Hammer Torturer", "Fireguard", "Anvilrage Medic", "Anvilrage Officer", "Anvilrage Soldier", "Fireguard Destroyer", "Twilight Bodyguard", "Twilight Emissary", "Anvilrage Marshal", "Doomforge Dragoon", "Warbringer Construct", "Ragereaver Golem", "Wrath Hammer Construct", "Molten War Golem", "Anvilrage Captain"}
 BD_Values = {.6, .5, .8, .6, .8, .2, .4, .6, .5, .7, .4, .9, .6, .5, .8, .8, 2, 2.2, 2.4, 2.2, .8}
 BD_Bosses = {"High Interrogator Gerstahn", "Houndmaster Grebmar", "Lord Roccor", "Pyromancer Loregrain", "Lord Incendius", "Fineous Darkvire", "Bael'Gar", "General Angerforge", "Golem Lord Argelmach", "Phalanx", "Ambassador Flamelash", "Doom'rel", "Magmus", "Emperor Dagran Thaurissan"}
@@ -37,12 +38,22 @@ BF_Info = {
 	{1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0}}
 BF_AreaTitles = {"Entrance Hall", "The Maker's Workshop", "Lab Corridor", "Broggok's Pen", "Summoner's Hall", "Kelidan's Ritual Site"}
 BF_AreaMobs = {"Annihilator", "Brute", "Manastalker", "Hellfire Imp", "Nascent Fel Orc", "Seductress", "Enforcer", "Rogue", "Warden", "Legionnaire", "Channeler", "Summoner", "Technician", "Warlock", "Adept"}
+]]
 
 -- Wrath of the Lich King Dungeons
 -- Ahn'Kahet Percentage Tables
 AK = {"Savage Cave Beast", "Plundering Geist","Deep Crawler", "Ahn'kahar Web Winder", "Ahn'kahar Slasher", "Bonegrinder", "Plague Walker", "Frostbringer", "Eye of Taldaram", "Twilight Worshipper", "Twilight Apostle", "Twilight Darkcaster", "Ahn'kahar Spell Flinger", "Forgotten One"}
-AK_Values = {1.8, .1, .4, 1, 1.4, 7, 1.8, 1.7, 2.3, 1.4, 2.7, 1.3, 2.2, 1.6, 2.4, 2.2, 7}
+AK_Values = {3, .1, 1.5, 2.4, 1.8, 7, 1.4, 2.7, 1.3, 2.2, 1.6, 2.4, 2.2, 5.5}
 AK_Bosses = {"Elder Nadox", "Prince Taldaram", "Jedoga Shadowseeker", "Herald Volazj", "Amanitar"}
+AK_Info = {
+	{0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1, 0},
+	{0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1}
+}
+AK_AreaTitles = {"Hall of the Conquered Kings", "Befouled Terrace", "Desecrated Altar", "Fungal Forest", "Volazj's Lair"}
+AK_AreaMobs = {"Cave Beast", "Plundering Geist", "Deep Crawler", "Web Winder", "Slasher", "Bonegrinder", "Plague Walker", "Frostbringer", "Eye of Taldaram", "Twilight Worshipper", "Twilight Apostle", "Twilight Darkcaster", "Spell Flinger", "Forgotten One"}
 
 -- Drak'Tharon Keep Percentage Tables
 DTK = {"Risen Drakkari Soulmage", "Risen Drakkari Warrior", "Scourge Reanimator", "Flesheating Ghoul", "Ghoul Tormentor", "Wretched Belcher", "Darkweb Recluse", "Darkweb Hatchling", "Drakkari Guardian", "Drakkari Shaman", "Drakkari Commander", "Drakkari Bat", "Risen Drakkari Bat Rider", "Drakkari Gutripper", "Drakkari Raptor Mount", "Drakkari Scytheclaw", "Risen Drakkari Handler", "Risen Drakkari Death Knight"}
@@ -50,14 +61,35 @@ DTK_Values = {1.2, 1.8, 2, .5, .6, 5, 2.8, .1, 1.8, 1.7, 4.5, .1, 3.8, 2, 1.8, 2
 DTK_Bosses = {"Trollgore", "Novos the Summoner", "King Dred", "The Prophet Tharon'ja"}
 
 -- Gundrak Percentage Tables
-GD = {"Unyielding Constrictor", "Spitting Cobra", "Drakkari God Hunter", "Drakkari Medicine Man", "Drakkari Golem", "Living Mojo", "Drakkari Earthshaker", "Drakkari Fire Weaver", "Drakkari Frenzy", "Drakkari Lancer", "Drakkari Inciter", "Drakkari Raider", "Drakkari Rhino", "Drakkari Battle Rider"}
-GD_Values = {1.2, 1.4, 2.1, 2.4, 4.5, 1.6, 3.1, 1.9, .1, 1.8, 1.6, 1.7, .8, 3.1}
+GD = {"Ruins Dweller","Unyielding Constrictor", "Spitting Cobra", "Drakkari God Hunter", "Drakkari Medicine Man", "Drakkari Golem", "Living Mojo", "Drakkari Earthshaker", "Drakkari Fire Weaver", "Drakkari Frenzy", "Drakkari Lancer", "Drakkari Inciter", "Drakkari Raider", "Drakkari Rhino", "Drakkari Battle Rider"}
+GD_Values = {.9, 1.2, 1.4, 2.1, 2.4, 4.5, 1.6, 3.1, 1.9, .1, 1.8, 1.6, 1.7, .8, 3.1}
 GD_Bosses = {"Slad'ran", "Drakkari Colossus", "Moorabi", "Gal'darah", "Eck the Ferocious"}
+GD_Info = {
+	{0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0},
+	{0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0},
+	{0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+	{0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+}
+GD_AreaTitles = {"Cave of Mam'toth", "Den of Sseratus", "Tomb of the Ancients (Waterway)", "Tomb of the Ancients (Boneyard)", "Totem Bridge to Ritual Chamber", "Den of Eck the Ferocious"}
+GD_AreaMobs = {"Ruins Dweller", "Constrictor", "Spitting Cobra", "God Hunter", "Medicine Man", "Golem","Living Mojo", "Earthshaker", "Fire Weaver", "Drakkari Frenzy", "Lancer", "Inciter", "Raider", "Drakkari Rhino", "Battle Rider"}
 
 -- Halls of Lightning Percentage Tables
-HOL = {"Hardened Steel Berserker", "Hardened Steel Reaver", "Hardened Steel Skycaller", "Stormforged Lieutenant", "Stormforged Mender", "Stormforged Tactician", "Blistering Steamrager", "Unbound Firestorm", "Titanium Siegebreaker", "Titanium Thunderer", "Storming Vortex", "Stormfury Revenant", "Stormforged Construct", "Stormforged Giant", "Stormforged Runeshaper", "Stormforged Sentinel", "Titanium Vanguard"}
-HOL_Values = {1.2, 1.3, 1.5, 1.4, 2.2, 2, 1.3, 2.7, 2, 1.2, 1.5, 2.4, 4.5, 6.7, 2.4, 2.2, 2}
+HOL = {"Hardened Steel Berserker", "Hardened Steel Reaver", "Hardened Steel Skycaller", "Stormforged Mender", "Stormforged Tactician", "Blistering Steamrager", "Unbound Firestorm", "Titanium Siegebreaker", "Titanium Thunderer", "Storming Vortex", "Stormfury Revenant", "Stormforged Construct", "Stormforged Giant", "Stormforged Runeshaper", "Stormforged Sentinel", "Titanium Vanguard"}
+HOL_Values = {2.6, 2.7, 3, 2.4, 2.2, 1.8, 1.9, 2.7, 2.6, 2.7, 2.3, 2.9, 6.7, 3.2, 3.1, 3}
 HOL_Bosses = {"General Bjarngrim", "Volkhan", "Ionar", "Loken"}
+HOL_Info = {
+	{1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0}
+}
+HOL_AreaTitles = {"Unyielding Garrison", "The Iron Crucible (Basement)", "The Iron Crucible (Upper Floor)", "The Hall of the Watchers", "Thundering Overlook", "Terrestrial Watchtower", "Loken's Throne Room"}
+HOL_AreaMobs = {"Steel Berserker", "Steel Reaver", "Steel Skycaller", "Mender", "Tactician", "Steamrager", "Firestorm", "Siegebreaker", "Thunderer", "Storming Vortex", "Revenant", "Construct", "Stormforged Giant", "Runeshaper", "Sentinel", "Vanguard"}
 
 -- Halls of Stone Percentage Tables
 HOS = {"Crystalline Shardling", "Dark Rune Controller", "Dark Rune Elementalist", "Dark Rune Giant", "Dark Rune Scholar", "Dark Rune Shaper", "Dark Rune Theurgist", "Dark Rune Warrior", "Dark Rune Worker", "Lightning Construct", "Raging Construct", "Unrelenting Construct"}
@@ -65,10 +97,18 @@ HOS_Values = {.2, 1.2, 1.4, 7, 1.7, 1.6, 1.5, 1.3, 1.7, 3.4, 3.3, 3.2}
 HOS_Bosses = {"Maiden of Grief", "Krystallus", "Sjonnir The Ironshaper"}
 
 -- The Nexus Percentage Tables
-NX = {"Alliance Berserker", "Alliance Cleric", "Alliance Commander", "Alliance Ranger", "Azure Magus", "Azure Warder", "Mage Slayer", "Mage Hunter Ascendant", "Mage Hunter Initiate", "Steward", "Azure Enforcer", "Azure Scale-Binder", "Chaotic Rift", "Crazed Mana-Surge", "Crazed Mana-Wraith", "Crystalline Keeper", "Crystalline Protector", "Crystalline Tender"}
-NX_Values = {1.4, 2, 1.5, 1.3, 3.4, 3.5, .6, 1.4, 2.1, 2.4, 3, 3.4, .7, 2.2, .1, 1.4, 6.5, 1.7}
+NX = {"Alliance Berserker", "Alliance Cleric", "Alliance Ranger", "Azure Magus", "Azure Warder", "Mage Slayer", "Mage Hunter Ascendant", "Mage Hunter Initiate", "Steward", "Azure Enforcer", "Azure Scale-Binder", "Crazed Mana-Surge", "Crazed Mana-Wraith", "Crystalline Keeper", "Crystalline Protector", "Crystalline Tender"}
+NX_Values = {2.5, 3, 2, 3.1, 3.4, .6, 1.4, 2.1, 2.4, 3, 3.4, 2.2, .1, 1.4, 6.5, 1.7}
 NX_Bosses = {"Commander Stoutbeard", "Grand Magus Telestra", "Anomalus", "Ormorok the Tree-Shaper", "Keristrasza"}
-
+NX_Info = {
+	{0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1}
+}
+NX_AreaTitles = {"Axis of Alignment", "Hall of Stasis", "The Librarium", "The Rift", "The Singing Grove"}
+NX_AreaMobs = {"Berserker", "Cleric", "Ranger", "Azure Magus", "Azure Warder", "Mage Slayer", "Ascendant", "Initiate", "Steward", "Enforcer", "Scale-Binder", "Mana-Surge", "Mana-Wraith", "Keeper", "Protector", "Tender"}
 -- The Oculus Percentage Tables
 OC = {"Azure Ring Guardian", "Azure Inquisitor", "Azure Ley-Whelp", "Azure Spellbinder", "Centrifuge Construct", "Ring-Lord Conjurer", "Ring-Lord Sorceress", "Phantasmal Air", "Phantasmal Cloudscraper", "Phantasmal Fire", "Phantasmal Mammoth", "Phantasmal Murloc", "Phantasmal Naga", "Phantasmal Ogre", "Phantasmal Water", "Phantasmal Wolf"}
 OC_Values = {1.1, 2.4, 1, 3.5, 7, 1, 1.6, 3, 2.6, 3, 2.5, 2.2, 2.7, 3.1, 2.6, 2.8}
@@ -80,10 +120,20 @@ UK_Values = {1.7, 1.8, 1.9, 1.7, 1.3, 1.6, 2, 2.1, 1.8, 5.6, .1, .3, .6}
 UK_Bosses = {"Prince Keleseth", "Skarvald the Constructor", "Ingvar the Plunderer"}
 
 -- Utgarde Pinnacle Percentage Tables
-UP = {"Dragonflayer Deathseeker", "Dragonflayer Fanatic", "Dragonflayer Seer", "Scourge Hulk", " Bloodthirsty Tundra Wolf", "Ferocious Rhino", "Frenzied Worgen", "Massive Jormungar", "Ravenous Furbolg", "Ymirjar Flesh Hunter", "Ymirjar Savage", "Ymirjar Berserker", "Ymirjar Dusk Shaman", "Ymirjar Necromancer", "Ymirjar Warrior", "Ymirjar Witch Doctor", "Ymirjar Harpooner"}
-UP_Values = {1.5, 2, 1.7, 5.2, .8, 4, 4, 4, 4, 1.6, 1.8, 2.4, 2.2, 2, .1, .2, .3}
+UP = {"Dragonflayer Deathseeker", "Dragonflayer Fanatic", "Dragonflayer Seer", "Scourge Hulk", "Ferocious Rhino", "Frenzied Worgen", "Massive Jormungar", "Ravenous Furbolg", "Ymirjar Flesh Hunter", "Ymirjar Savage", "Ymirjar Berserker", "Ymirjar Dusk Shaman", "Ymirjar Necromancer", "Ymirjar Warrior", "Ymirjar Witch Doctor", "Ymirjar Harpooner"}
+UP_Values = {3, 2.6, 2.4, 5.8, 3.9, 3.9, 3.9, 3.9, 2.4, 1.8, 2.4, 2.2, 2, .2, .4, .4}
 UP_Bosses = {"Svala Sorrowgrave", "Gortok Palehoof", "Skadi the Ruthless", "King Ymiron"}
-
+UP_Info = {
+	{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0}
+}
+UP_AreaTitles = {"The King's Hoard", "Raven's Watch", "Observance Hall", "Trophy Hall", "Eagle's Eye", "Ruined Court", "Ymiron's Seat"}
+UP_AreaMobs = {"Deathseeker", "Fanatic", "Seer", "Scourge Hulk", "Tundra Wolf", "Ferocious Rhino", "Frenzied Worgen", "Jormungar", "Furbolg", "Flesh Hunter", "Savage", "Berserker", "Dusk Shaman", "Necromancer", "Warrior", "Witch Doctor", "Harpooner"}
 -- Current Tournament/Ranked Map Pool
 RANKED_MAPS = {UP, DTK, HOL, AK, GD, NX}
 
@@ -99,8 +149,10 @@ killsInCleave = 0
 bossCounter = 0
 currentFloor = 1
 currentArea = 1
+tableCopy = nil
 currentMap = "AhnKahet"
 gateKeeperBool = false
+bountyHunterBool = false
 
 
 local function OnKeyStart(level, mobs, values, bosses)
@@ -113,20 +165,36 @@ local function ResetClock()
 	timeLimit = 1800
 	timeRemaining = timeLimit
 	if highestKey > 0 then
-		timeRemaining = timeRemaining - highestKey * 60
+		timeRemaining = timeRemaining - math.min(highestKey * 60, 1200)
 	end
 end
 
-
+local function ApplyBountyHunter(tableValues)
+	if highestKey >= 6 then
+		tableCopy = tableValues
+		choice = math.random(table.getn(tableValues))
+		tableValues[choice] = tableValues[choice] * (table.getn(tableValues) *.1)
+		for i=1,table.getn(tableValues) do
+			if not(i == choice) then
+				tableValues[i] = tableValues[i] * .1
+			end
+		end
+		bountyHunterBool = true
+	end
+end
+local function RemoveBountyHunter(tableValues)
+	tableValues = tableCopy
+	bountyHunterBool = false
+end
 
 
 -- Helper functions
 local function Search(destName, mobs, bosses, values)
 	for i=1,table.getn(mobs) do
 		if mobs[i] == destName then
-			if highestKey >= 6 then
+			if highestKey >= 6 and (GetZoneText() == "The Nexus" or GetZoneText() == "Gundrak" or GetZoneText() == "Halls of Lightning")  then
 				if cleaveSpree > 0 then
-					currentPercent = currentPercent + values[i] * .35 + .3 * (killsInCleave / 2)
+					currentPercent = currentPercent + values[i] * .3 + .3 * (killsInCleave / 2)
 					killsInCleave = killsInCleave + 1
 				else
 					killsInCleave = 1
@@ -282,7 +350,6 @@ keyMap.keyPlanFrame:Show()
 
 
 
-
 -- Previous and Next Buttons for the map pages.
 keyMap.keyPlanFrame.next = CreateFrame("Button", nil, keyMap.keyPlanFrame, "GameMenuButtonTemplate")
 keyMap.keyPlanFrame.next:SetSize(20, 20)
@@ -348,8 +415,8 @@ local function setKeyInfo(areaTitles, areaValues, areaInfo, areaMobs, areaNum)
 	keyMap.keyInfo.title:SetText(string.format("%d: %s", areaNum, areaTitles[areaNum]))
 	keyMap.keyInfo.title:Show()
 	for i=1,table.getn(areaValues) do
-		j = i % 4
-		x = (i - j) * 35 - 220
+		j = (i-1) % 4
+		x = (i - j) * 35 - 240
 		y = j * 20 % 80
 		if keyMap.keyInfo[i] then
 			keyMap.keyInfo[i]:Hide()
@@ -358,13 +425,14 @@ local function setKeyInfo(areaTitles, areaValues, areaInfo, areaMobs, areaNum)
 		if areaInfo[i] == 1 then
 			keyMap.keyInfo[i] = keyMap.keyInfo:CreateFontString(nil,"Overlay", "GameFontNormal")
 			keyMap.keyInfo[i]:SetPoint("BOTTOM", keyMap.keyInfo, "BOTTOM", x, y+10)
-			keyMap.keyInfo[i]:SetText(string.format("%s : %.1f", areaMobs[i], areaValues[i]))
+			keyMap.keyInfo[i]:SetText(string.format("%s : %.1f%%", areaMobs[i], areaValues[i]))
 			keyMap.keyInfo[i]:Show()
 		else
 			keyMap.keyInfo[i] = keyMap.keyInfo:CreateFontString(nil,"Overlay", "GameFontHighlight")
 			keyMap.keyInfo[i]:SetPoint("BOTTOM", keyMap.keyInfo, "BOTTOM", x, y+10)
-			keyMap.keyInfo[i]:SetText(string.format("%s : %.1f", areaMobs[i], areaValues[i]))
+			keyMap.keyInfo[i]:SetText(string.format("%s : %.1f%%", areaMobs[i], areaValues[i]))
 			keyMap.keyInfo[i]:Show()
+			
 		end
 	end
 
@@ -381,15 +449,29 @@ local function changeArea(currentMap, areaNum)
 	if currentMap == "TheBloodFurnace" then
 		setKeyInfo(BF_AreaTitles, BF_Values, BF_Info[areaNum], BF_AreaMobs, areaNum)
 	end
-	
+	if currentMap == "AhnKahet" then
+		setKeyInfo(AK_AreaTitles, AK_Values, AK_Info[areaNum], AK_AreaMobs, areaNum)
+	end
+	if currentMap == "GunDrak" then
+		setKeyInfo(GD_AreaTitles, GD_Values, GD_Info[areaNum], GD_AreaMobs, areaNum)
+	end
+	if currentMap == "HallsOfLightning" then
+		setKeyInfo(HOL_AreaTitles, HOL_Values, HOL_Info[areaNum], HOL_AreaMobs, areaNum)
+	end
+	if currentMap == "TheNexus" then
+		setKeyInfo(NX_AreaTitles, NX_Values, NX_Info[areaNum], NX_AreaMobs, areaNum)
+	end
+	if currentMap == "UtgardePinnacle" then
+		setKeyInfo(UP_AreaTitles, UP_Values, UP_Info[areaNum], UP_AreaMobs, areaNum)
+	end
 end
 
 keyMap.keyInfo:Hide()
 
--- IO Info Frame
-keyMap.ioInfo = CreateFrame("Frame", nil, keyMap, "InsetFrameTemplate2")
-keyMap.ioInfo:SetSize(600, 150)
-keyMap.ioInfo:SetPoint("BOTTOM", keyMap, "BOTTOM", 170, 0)
+
+--keyMap.ioInfo.UP_io
+--keyMap.ioInfo.HOL_io
+--keyMap.ioInfo.GD_io
 
 -- Function for changing the Area Information tab.
 
@@ -457,7 +539,7 @@ gd.subZone_1:SetPoint("CENTER", gd, "CENTER", -95, 0)
 gd.subZone_1:SetSize(20, 20)
 gd.subZone_1:SetText("1")
 gd.subZone_1:SetScript("OnClick", function()
-	changeArea("TheBloodFurnace", 1)
+	changeArea("GunDrak", 1)
 end)
 
 gd.subZone_2 = CreateFrame("Button", nil, gd, "GameMenuButtonTemplate")
@@ -465,7 +547,7 @@ gd.subZone_2:SetPoint("CENTER", gd, "CENTER", 45, 5)
 gd.subZone_2:SetSize(20, 20)
 gd.subZone_2:SetText("2")
 gd.subZone_2:SetScript("OnClick", function()
-	changeArea("TheBloodFurnace", 2)
+	changeArea("GunDrak", 2)
 end)
 
 gd.subZone_3 = CreateFrame("Button", nil, gd, "GameMenuButtonTemplate")
@@ -473,7 +555,7 @@ gd.subZone_3:SetPoint("CENTER", gd, "CENTER", -80, -70)
 gd.subZone_3:SetSize(20, 20)
 gd.subZone_3:SetText("3")
 gd.subZone_3:SetScript("OnClick", function()
-	changeArea("TheBloodFurnace", 3)
+	changeArea("GunDrak", 3)
 end)
 
 gd.subZone_4 = CreateFrame("Button", nil, gd, "GameMenuButtonTemplate")
@@ -481,7 +563,7 @@ gd.subZone_4:SetPoint("CENTER", gd, "CENTER", 20, -90)
 gd.subZone_4:SetSize(20, 20)
 gd.subZone_4:SetText("4")
 gd.subZone_4:SetScript("OnClick", function()
-	changeArea("TheBloodFurnace", 4)
+	changeArea("GunDrak", 4)
 end)
 
 gd.subZone_5 = CreateFrame("Button", nil, gd, "GameMenuButtonTemplate")
@@ -489,7 +571,7 @@ gd.subZone_5:SetPoint("CENTER", gd, "CENTER", -25, 5)
 gd.subZone_5:SetSize(20, 20)
 gd.subZone_5:SetText("5")
 gd.subZone_5:SetScript("OnClick", function()
-	changeArea("TheBloodFurnace", 5)
+	changeArea("GunDrak", 5)
 end)
 
 
@@ -498,33 +580,213 @@ gd.subZone_6:SetPoint("CENTER", gd, "CENTER", -160, -20)
 gd.subZone_6:SetSize(20, 20)
 gd.subZone_6:SetText("6")
 gd.subZone_6:SetScript("OnClick", function()
-	changeArea("TheBloodFurnace", 6)
+	changeArea("GunDrak", 6)
 end)
 -- Halls of Lightning key planner Nodes
 keyMap.keyPlanFrame.HOL_1 = CreateFrame("Frame", nil, keyMap.keyPlanFrame)
 keyMap.keyPlanFrame.HOL_1:SetSize(500, 300)
 keyMap.keyPlanFrame.HOL_1:SetPoint("CENTER", keyMap.keyPlanFrame, "CENTER")
 keyMap.keyPlanFrame.HOL_1:Show()
-h = keyMap.keyPlanFrame.HOL_1
-h.subZone_1 = CreateFrame("Button", nil, h, "GameMenuButtonTemplate")
-h.subZone_1:SetPoint("CENTER", h, "CENTER", -105, -15)
-h.subZone_1:SetSize(20, 20)
-h.subZone_1:SetText("1")
-h.subZone_1:SetScript("OnClick", function()
-	return
+h1 = keyMap.keyPlanFrame.HOL_1
+h1.subZone_1 = CreateFrame("Button", nil, h1, "GameMenuButtonTemplate")
+h1.subZone_1:SetPoint("CENTER", h1, "CENTER", -105, -15)
+h1.subZone_1:SetSize(20, 20)
+h1.subZone_1:SetText("1")
+h1.subZone_1:SetScript("OnClick", function()
+	changeArea("HallsOfLightning", 1)
 end)
-h.subZone_1:Show()
+h1.subZone_1:Show()
 
-h.subZone_2 = CreateFrame("Button", nil, h, "GameMenuButtonTemplate")
-h.subZone_2:SetPoint("CENTER", h, "CENTER", 170, -15)
-h.subZone_2:SetSize(20, 20)
-h.subZone_2:SetText("2")
-h.subZone_2:SetScript("OnClick", function()
-	return
+h1.subZone_2 = CreateFrame("Button", nil, h1, "GameMenuButtonTemplate")
+h1.subZone_2:SetPoint("CENTER", h1, "CENTER", 170, -15)
+h1.subZone_2:SetSize(20, 20)
+h1.subZone_2:SetText("2")
+h1.subZone_2:SetScript("OnClick", function()
+	changeArea("HallsOfLightning", 2)
 end)
-h.subZone_2:Show()
-h:Hide()
+h1.subZone_2:Show()
 
+keyMap.keyPlanFrame.HOL_2 = CreateFrame("Frame", nil, keyMap.keyPlanFrame)
+keyMap.keyPlanFrame.HOL_2:SetSize(500, 300)
+keyMap.keyPlanFrame.HOL_2:SetPoint("CENTER", keyMap.keyPlanFrame, "CENTER")
+keyMap.keyPlanFrame.HOL_2:Show()
+h2 = keyMap.keyPlanFrame.HOL_2
+h2.subZone_3 = CreateFrame("Button", nil, h2, "GameMenuButtonTemplate")
+h2.subZone_3:SetPoint("CENTER", h2, "CENTER", -20, 110)
+h2.subZone_3:SetSize(20, 20)
+h2.subZone_3:SetText("3")
+h2.subZone_3:SetScript("OnClick", function()
+	changeArea("HallsOfLightning", 3)
+end)
+h2.subZone_3:Show()
+
+h2.subZone_4 = CreateFrame("Button", nil, h2, "GameMenuButtonTemplate")
+h2.subZone_4:SetPoint("CENTER", h2, "CENTER", -20, -20)
+h2.subZone_4:SetSize(20, 20)
+h2.subZone_4:SetText("4")
+h2.subZone_4:SetScript("OnClick", function()
+	changeArea("HallsOfLightning", 4)
+end)
+h2.subZone_4:Show()
+
+h2.subZone_5 = CreateFrame("Button", nil, h2, "GameMenuButtonTemplate")
+h2.subZone_5:SetPoint("CENTER", h2, "CENTER", 65, -60)
+h2.subZone_5:SetSize(20, 20)
+h2.subZone_5:SetText("5")
+h2.subZone_5:SetScript("OnClick", function()
+	changeArea("HallsOfLightning", 5)
+end)
+h2.subZone_5:Show()
+
+
+h2.subZone_6 = CreateFrame("Button", nil, h2, "GameMenuButtonTemplate")
+h2.subZone_6:SetPoint("CENTER", h2, "CENTER", -45, -100)
+h2.subZone_6:SetSize(20, 20)
+h2.subZone_6:SetText("6")
+h2.subZone_6:SetScript("OnClick", function()
+	changeArea("HallsOfLightning", 6)
+end)
+h2.subZone_6:Show()
+
+h2.subZone_7 = CreateFrame("Button", nil, h2, "GameMenuButtonTemplate")
+h2.subZone_7:SetPoint("CENTER", h2, "CENTER", -180, -100)
+h2.subZone_7:SetSize(20, 20)
+h2.subZone_7:SetText("7")
+h2.subZone_7:SetScript("OnClick", function()
+	changeArea("HallsOfLightning", 7)
+end)
+h2.subZone_7:Show()
+
+h2:Hide()
+
+-- Nexus Buttons for Planner
+keyMap.keyPlanFrame.NX_1 = CreateFrame("Frame", nil, keyMap.keyPlanFrame)
+keyMap.keyPlanFrame.NX_1:SetSize(500, 300)
+keyMap.keyPlanFrame.NX_1:SetPoint("CENTER", keyMap.keyPlanFrame, "CENTER")
+keyMap.keyPlanFrame.NX_1:Show()
+nx = keyMap.keyPlanFrame.NX_1
+nx.subZone_1 = CreateFrame("Button", nil, nx, "GameMenuButtonTemplate")
+nx.subZone_1:SetPoint("CENTER", nx, "CENTER", -85, -70)
+nx.subZone_1:SetSize(20, 20)
+nx.subZone_1:SetText("1")
+nx.subZone_1:SetScript("OnClick", function()
+	changeArea("TheNexus", 1)
+end)
+nx.subZone_1:Show()
+
+nx.subZone_2 = CreateFrame("Button", nil, nx, "GameMenuButtonTemplate")
+nx.subZone_2:SetPoint("CENTER", nx, "CENTER", -180, 0)
+nx.subZone_2:SetSize(20, 20)
+nx.subZone_2:SetText("2")
+nx.subZone_2:SetScript("OnClick", function()
+	changeArea("TheNexus", 2)
+end)
+nx.subZone_2:Show()
+
+nx.subZone_3 = CreateFrame("Button", nil, nx, "GameMenuButtonTemplate")
+nx.subZone_3:SetPoint("CENTER", nx, "CENTER", -130, 70)
+nx.subZone_3:SetSize(20, 20)
+nx.subZone_3:SetText("3")
+nx.subZone_3:SetScript("OnClick", function()
+	changeArea("TheNexus", 3)
+end)
+nx.subZone_3:Show()
+nx.subZone_4 = CreateFrame("Button", nil, nx, "GameMenuButtonTemplate")
+nx.subZone_4:SetPoint("CENTER", nx, "CENTER", 60, 110)
+nx.subZone_4:SetSize(20, 20)
+nx.subZone_4:SetText("4")
+nx.subZone_4:SetScript("OnClick", function()
+	changeArea("TheNexus", 4)
+end)
+nx.subZone_4:Show()
+nx.subZone_5 = CreateFrame("Button", nil, nx, "GameMenuButtonTemplate")
+nx.subZone_5:SetPoint("CENTER", nx, "CENTER", 50, -60)
+nx.subZone_5:SetSize(20, 20)
+nx.subZone_5:SetText("5")
+nx.subZone_5:SetScript("OnClick", function()
+	changeArea("TheNexus", 5)
+end)
+nx.subZone_5:Show()
+
+
+nx:Hide()
+
+-- Utgarde Pinnacle Buttons
+keyMap.keyPlanFrame.UP_1 = CreateFrame("Frame", nil, keyMap.keyPlanFrame)
+keyMap.keyPlanFrame.UP_1:SetSize(500, 300)
+keyMap.keyPlanFrame.UP_1:SetPoint("CENTER", keyMap.keyPlanFrame, "CENTER")
+keyMap.keyPlanFrame.UP_1:Show()
+up1 = keyMap.keyPlanFrame.UP_1
+
+up1.subZone_3 = CreateFrame("Button", nil, up1, "GameMenuButtonTemplate")
+up1.subZone_3:SetPoint("CENTER", up1, "CENTER", -100, -80)
+up1.subZone_3:SetSize(20, 20)
+up1.subZone_3:SetText("3")
+up1.subZone_3:SetScript("OnClick", function()
+	changeArea("UtgardePinnacle", 3)
+end)
+
+up1.subZone_3:Show()
+
+up1.subZone_6 = CreateFrame("Button", nil, up1, "GameMenuButtonTemplate")
+up1.subZone_6:SetPoint("CENTER", up1, "CENTER", 30, 20)
+up1.subZone_6:SetSize(20, 20)
+up1.subZone_6:SetText("6")
+up1.subZone_6:SetScript("OnClick", function()
+	changeArea("UtgardePinnacle", 6)
+end)
+
+up1.subZone_6:Show()
+up1:Hide()
+
+keyMap.keyPlanFrame.UP_2 = CreateFrame("Frame", nil, keyMap.keyPlanFrame)
+keyMap.keyPlanFrame.UP_2:SetSize(500, 300)
+keyMap.keyPlanFrame.UP_2:SetPoint("CENTER", keyMap.keyPlanFrame, "CENTER")
+keyMap.keyPlanFrame.UP_2:Show()
+up2 = keyMap.keyPlanFrame.UP_2
+up2.subZone_1 = CreateFrame("Button", nil, up2, "GameMenuButtonTemplate")
+up2.subZone_1:SetPoint("CENTER", up2, "CENTER", -40, 80)
+up2.subZone_1:SetSize(20, 20)
+up2.subZone_1:SetText("1")
+up2.subZone_1:SetScript("OnClick", function()
+	changeArea("UtgardePinnacle", 1)
+end)
+up2.subZone_1:Show()
+
+up2.subZone_2 = CreateFrame("Button", nil, up2, "GameMenuButtonTemplate")
+up2.subZone_2:SetPoint("CENTER", up2, "CENTER", -100, -10)
+up2.subZone_2:SetSize(20, 20)
+up2.subZone_2:SetText("2")
+up2.subZone_2:SetScript("OnClick", function()
+	changeArea("UtgardePinnacle", 2)
+end)
+up2.subZone_2:Show()
+
+up2.subZone_4 = CreateFrame("Button", nil, up2, "GameMenuButtonTemplate")
+up2.subZone_4:SetPoint("CENTER", up2, "CENTER", 60, -120)
+up2.subZone_4:SetSize(20, 20)
+up2.subZone_4:SetText("4")
+up2.subZone_4:SetScript("OnClick", function()
+	changeArea("UtgardePinnacle", 4)
+end)
+
+up2.subZone_5 = CreateFrame("Button", nil, up2, "GameMenuButtonTemplate")
+up2.subZone_5:SetPoint("CENTER", up2, "CENTER", 110, -10)
+up2.subZone_5:SetSize(20, 20)
+up2.subZone_5:SetText("5")
+up2.subZone_5:SetScript("OnClick", function()
+	changeArea("UtgardePinnacle", 5)
+end)
+up2.subZone_5:Show()
+
+up2.subZone_7 = CreateFrame("Button", nil, up2, "GameMenuButtonTemplate")
+up2.subZone_7:SetPoint("CENTER", up2, "CENTER", -30, -10)
+up2.subZone_7:SetSize(20, 20)
+up2.subZone_7:SetText("7")
+up2.subZone_7:SetScript("OnClick", function()
+	changeArea("UtgardePinnacle", 7)
+end)
+up2.subZone_7:Show()
 
 -- AhnKahet key planner Nodes
 keyMap.keyPlanFrame.AK = CreateFrame("Frame", nil, keyMap.keyPlanFrame)
@@ -538,7 +800,7 @@ ak.subZone_1:SetPoint("CENTER", ak, "CENTER", 170, 30)
 ak.subZone_1:SetSize(20, 20)
 ak.subZone_1:SetText("1")
 ak.subZone_1:SetScript("OnClick", function()
-	return
+	changeArea("AhnKahet", 1)
 end)
 ak.subZone_1:Show()
 
@@ -547,7 +809,7 @@ ak.subZone_2:SetPoint("CENTER", ak, "CENTER", 40, 60)
 ak.subZone_2:SetSize(20, 20)
 ak.subZone_2:SetText("2")
 ak.subZone_2:SetScript("OnClick", function()
-	return
+	changeArea("AhnKahet", 2)
 end)
 ak.subZone_2:Show()
 
@@ -557,7 +819,7 @@ ak.subZone_3:SetPoint("CENTER", ak, "CENTER", 40, -40)
 ak.subZone_3:SetSize(20, 20)
 ak.subZone_3:SetText("3")
 ak.subZone_3:SetScript("OnClick", function()
-	return
+	changeArea("AhnKahet", 3)
 end)
 ak.subZone_3:Show()
 
@@ -566,7 +828,7 @@ ak.subZone_4:SetPoint("CENTER", ak, "CENTER", 90, -70)
 ak.subZone_4:SetSize(20, 20)
 ak.subZone_4:SetText("4")
 ak.subZone_4:SetScript("OnClick", function()
-	return
+	changeArea("AhnKahet", 4)
 end)
 ak.subZone_4:Show()
 
@@ -575,7 +837,7 @@ ak.subZone_5:SetPoint("CENTER", ak, "CENTER", -100, 0)
 ak.subZone_5:SetSize(20, 20)
 ak.subZone_5:SetText("5")
 ak.subZone_5:SetScript("OnClick", function()
-	return
+	changeArea("AhnKahet", 5)
 end)
 ak.subZone_5:Show()
 
@@ -584,7 +846,7 @@ ak:Hide()
 --[[ 
 	TODO: Add stuff to the IO Info before hiding it.
 ]]
-keyMap.ioInfo:Hide()
+
 
 
 -- Key Planner Button
@@ -638,10 +900,15 @@ function setKeyMap(textLocation, floor)
 	else 
 		textLocation2 = textLocation
 	end
-	if textLocation == "HallsofLightning" and currentFloor == 1 then
-		h:Show()
+	if textLocation == "HallsOfLightning" and currentFloor == 1 then
+		h1:Show()
+		h2:Hide()
+	elseif textLocation == "HallsOfLightning" and currentFloor == 2 then
+		h2:Show()
+		h1:Hide()
 	else
-		h:Hide()
+		h1:Hide()
+		h2:Hide()
 	end
 	if textLocation == "TheBloodFurnace" and currentFloor == 1 then
 		bf_1:Show()
@@ -657,6 +924,21 @@ function setKeyMap(textLocation, floor)
 		ak:Show()
 	else
 		ak:Hide()
+	end
+	if textLocation == "UtgardePinnacle" and currentFloor == 1 then
+		up1:Show()
+		up2:Hide()
+	elseif textLocation == "UtgardePinnacle" and currentFloor == 2 then
+		up1:Hide()
+		up2:Show()
+	else
+		up2:Hide()
+		up1:Hide()
+	end
+	if textLocation == "TheNexus" and currentFloor == 1 then
+		nx:Show()
+	else
+		nx:Hide()
 	end
 	if keyMap.firstMap then
 		keyMap.firstMap:Hide()
@@ -956,6 +1238,42 @@ keyStarter:SetScript("OnEvent", function(self, event, arg1)
 		end
 		-- Currently non-complex. Will factor in time next addon patch.
 		keyStarter.ioText:SetText(string.format("%d", (highestAK + highestGD + highestHOL + highestNX + highestUP) * 50))
+		-- IO Info Frame
+		keyMap.ioInfo = CreateFrame("Frame", nil, keyMap, "InsetFrameTemplate2")
+		keyMap.ioInfo:SetSize(600, 150)
+		keyMap.ioInfo:SetPoint("BOTTOM", keyMap, "BOTTOM", 170, 0)
+
+		-- TODO: CREATE 5 text fields
+		keyMap.ioInfo.s1_score = keyMap.ioInfo:CreateFontString(nil, "Overlay","QuestFont_Enormous")
+		keyMap.ioInfo.s1_score:SetPoint("LEFT", keyMap.ioInfo, "LEFT", 10, 50)
+		keyMap.ioInfo.s1_score:SetText(string.format("Season 1 IO: %d", (highestNX + highestAK + highestGD + highestUP + highestHOL) * 50))
+		keyMap.ioInfo.s1_score:Show()
+
+		keyMap.ioInfo.NX_io = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontHighlight")
+		keyMap.ioInfo.NX_io:SetPoint("LEFT", keyMap.ioInfo, "LEFT", 10, -40)
+		keyMap.ioInfo.NX_io:SetText(string.format("Highest Nexus Key: %d", highestNX))
+		keyMap.ioInfo.NX_io:Show()
+
+		keyMap.ioInfo.AK_io = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontHighlight")
+		keyMap.ioInfo.AK_io:SetPoint("LEFT", keyMap.ioInfo, "LEFT", 10, 20)
+		keyMap.ioInfo.AK_io:SetText(string.format("Highest Ahn'Kahet Key: %d", highestAK))
+		keyMap.ioInfo.AK_io:Show()
+
+		keyMap.ioInfo.UP_io = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontHighlight")
+		keyMap.ioInfo.UP_io:SetPoint("LEFT", keyMap.ioInfo, "LEFT", 10, 0)
+		keyMap.ioInfo.UP_io:SetText(string.format("Highest Utgarde Pinnacle Key: %d", highestUP))
+		keyMap.ioInfo.UP_io:Show()
+
+		keyMap.ioInfo.HOL_io = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontHighlight")
+		keyMap.ioInfo.HOL_io:SetPoint("LEFT", keyMap.ioInfo, "LEFT", 10, -20)
+		keyMap.ioInfo.HOL_io:SetText(string.format("Highest Halls of Lightning Key: %d", highestUP))
+		keyMap.ioInfo.HOL_io:Show()
+
+		keyMap.ioInfo.GD_io = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontHighlight")
+		keyMap.ioInfo.GD_io:SetPoint("LEFT", keyMap.ioInfo, "LEFT", 10, -60)
+		keyMap.ioInfo.GD_io:SetText(string.format("Highest Gundrak Key: %d", highestGD))
+		keyMap.ioInfo.GD_io:Show()
+		keyMap.ioInfo:Hide()
 	end	
 end)
 
@@ -1017,7 +1335,7 @@ keyStarter:SetScript("OnUpdate", function(self, elapsed)
 		if highestKey > 0 then
 			keyStarter.levelDownButton:Show()
 		end
-		if highestKey <= 10 then
+		if highestKey <= 30 then
 			keyStarter.levelUpButton:Show()
 		end
 		-- Check the highest level a player has completed once.
@@ -1099,8 +1417,40 @@ keyStarter.ioText = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontHighlig
 keyStarter.ioText:SetPoint("CENTER", keyStarter, "CENTER", 0, 45)
 keyStarter.ioLabel:SetText("IO Score:")
 
+
 -- This is called when the "Start Key" button is hit, it shows the keyManager (manages active keys) and handles setting the onUpdate method for the keyManager.
 local function StartKey()
+
+
+	local function incrementVictory(text) 
+		if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
+			if highestKey > highestAK then
+				highestAK = highestAK + 1
+			end
+		end
+		if GetZoneText() == "Halls of Lightning" then
+			if highestKey > highestHOL then
+				highestHOL = highestHOL + 1
+			end
+		end
+		if GetZoneText() == "Utgarde Pinnacle" then
+			if highestKey > highestNX then
+				highestUP = highestUP + 1
+			end
+		end
+		if GetZoneText() == "The Nexus" then
+			if highestKey > highestNX then
+				highestNX = highestNX + 1
+			end
+		end
+		if GetZoneText() == "Gundrak" then
+			if highestKey > highestGD then
+				highestGD = highestGD + 1
+			end
+		end
+	end
+
+	-- GETS THE DUNGEON DIFFICULTY, USE TO CHECK IF PLAYER IS IN HEROIC/NOT
 	ResetClock()
 	keyManager:Show()
 	bossesDowned = 0
@@ -1114,7 +1464,9 @@ local function StartKey()
 		keyManager.keyImage.texture = y
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(AK_Bosses)
-
+		if highestKey >= 6 then
+			ApplyBountyHunter(AK_Values)
+		end
 		keyStarted = true
 	elseif GetZoneText() == "Halls of Lightning" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
@@ -1194,6 +1546,9 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(UP_Bosses)
 		keyStarted = true
+		if highestKey >= 6 then
+			ApplyBountyHunter(UP_Values)
+		end
 	elseif GetZoneText() == "Utgarde Keep" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1247,30 +1602,11 @@ local function StartKey()
 			if timeRemaining <= 0 then
 				if currentPercent >= 100 and bossesDowned == maxBosses then
 					print("You have completed the keystone, congratulations!")
-					if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
-						if highestKey > highestAK then
-							highestAK = highestAK + 1
-						end
-					end
-					if GetZoneText() == "Halls of Lightning" then
-						if highestKey > highestHOL then
-							highestHOL = highestHOL + 1
-						end
-					end
-					if GetZoneText() == "Utgarde Pinnacle" then
-						if highestKey > highestNX then
-							highestUP = highestUP + 1
-						end
-					end
-					if GetZoneText() == "The Nexus" then
-						if highestKey > highestNX then
-							highestNX = highestNX + 1
-						end
-					end
-					if GetZoneText() == "Gundrak" then
-						if highestKey > highestGD then
-							highestGD = highestGD + 1
-						end
+					incrementVictory(GetZoneText())
+					if highestKey >= 6 and GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
+						RemoveBountyHunter(AK_Values)
+					elseif highestKey >= 6 and GetZoneText() == "Utgarde Pinnacle" then
+						RemoveBountyHunter(UP_Values)
 					end
 					-- TODO: Add victory screen and give user IO.
 					keyMap:Show()
@@ -1283,36 +1619,25 @@ local function StartKey()
 					keyStarted = false
 				end
 			elseif currentPercent >= 100 and bossesDowned == maxBosses then
-				print("You have completed the keystone, congratulations!")
-					if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
-						if highestKey > highestAK then
-							highestAK = highestAK + 1
-						end
-					end
-					if GetZoneText() == "Halls of Lightning" then
-						if highestKey > highestHOL then
-							highestHOL = highestHOL + 1
-						end
-					end
-					if GetZoneText() == "Utgarde Pinnacle" then
-						if highestKey > highestNX then
-							highestUP = highestUP + 1
-						end
-					end
-					if GetZoneText() == "The Nexus" then
-						if highestKey > highestNX then
-							highestNX = highestNX + 1
-						end
-					end
-					if GetZoneText() == "Gundrak" then
-						if highestKey > highestGD then
-							highestGD = highestGD + 1
-						end
-					end
-					keyStarted = false
-					-- TODO: Add victory screen and give user IO.
-					keyMap:Show()
+				if highestKey >= 10 and gateKeeperBool then
+					incrementVictory(GetZoneText())
+				elseif highestKey >= 10 then
+					print("You failed the key.")
 					keyManager:Hide()
+					keyMap:Show()
+					keyStarted = false
+				else
+					incrementVictory(GetZoneText())
+					keyManager:Hide()
+					keyMap:Show()
+					keyStarted = false
+				end
+				print("You have completed the keystone, congratulations!")
+				incrementVictory(GetZoneText())
+				keyStarted = false
+				-- TODO: Add victory screen and give user IO.
+				keyMap:Show()
+				keyManager:Hide()
 			else
 				z:SetPoint("CENTER", keyManager.innerFrame, "LEFT", currentPercent + 10, 10)
 				z:SetSize(200 * math.min(1, ((currentPercent + .01) / 100)), 10)
