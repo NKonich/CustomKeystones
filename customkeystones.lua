@@ -99,7 +99,7 @@ HOS_Bosses = {"Maiden of Grief", "Krystallus", "Sjonnir The Ironshaper"}
 -- The Nexus Percentage Tables
 NX = {"Alliance Berserker", "Alliance Cleric", "Alliance Ranger", "Azure Magus", "Azure Warder", "Mage Slayer", "Mage Hunter Ascendant", "Mage Hunter Initiate", "Steward", "Azure Enforcer", "Azure Scale-Binder", "Crazed Mana-Surge", "Crazed Mana-Wraith", "Crystalline Keeper", "Crystalline Protector", "Crystalline Tender"}
 NX_Values = {2.5, 3, 2, 3.1, 3.4, .6, 1.4, 2.1, 2.4, 3, 3.4, 2.2, .1, 1.4, 6.5, 1.7}
-NX_Bosses = {"Commander Stoutbeard", "Grand Magus Telestra", "Anomalus", "Ormorok the Tree-Shaper", "Keristrasza"}
+NX_Bosses = {"Grand Magus Telestra", "Anomalus", "Ormorok the Tree-Shaper", "Keristrasza"}
 NX_Info = {
 	{0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -153,6 +153,7 @@ tableCopy = nil
 currentMap = "AhnKahet"
 gateKeeperBool = false
 bountyHunterBool = false
+killingSpreeBool = false
 
 
 local function OnKeyStart(level, mobs, values, bosses)
@@ -169,24 +170,33 @@ local function ResetClock()
 	end
 end
 
+-- Affix Functions
 local function ApplyBountyHunter(tableValues)
 	if highestKey >= 6 then
 		tableCopy = tableValues
 		choice = math.random(table.getn(tableValues))
-		tableValues[choice] = tableValues[choice] * (table.getn(tableValues) *.1)
+		tableValues[choice] = tableValues[choice] * (table.getn(tableValues) *.5)
 		for i=1,table.getn(tableValues) do
 			if not(i == choice) then
-				tableValues[i] = tableValues[i] * .1
+				tableValues[i] = tableValues[i] * (.1 * table.getn(tableValues))
 			end
 		end
 		bountyHunterBool = true
 	end
 end
+
 local function RemoveBountyHunter(tableValues)
 	tableValues = tableCopy
 	bountyHunterBool = false
 end
 
+local function ApplyKillingSpree()
+	killingSpreeBool = true
+end
+
+local function RemoveKillingSpree()
+	killingSpreeBool = false
+end
 
 -- Helper functions
 local function Search(destName, mobs, bosses, values)
@@ -201,11 +211,13 @@ local function Search(destName, mobs, bosses, values)
 					cleaveSpree = 5
 				end
 			elseif highestKey >= 4 then
-				if killingSpree > 0 then
-					currentPercent = currentPercent + values[i] * .65 + .1 * killingSpree
-					killingSpree = killingSpree + 5
-				else 
-					killingSpree = 5
+				if killingSpreeBool then
+					if killingSpree > 0 then
+						currentPercent = currentPercent + values[i] * .8 + .1 * killingSpree
+						killingSpree = killingSpree + 5
+					else 
+						killingSpree = 5
+					end
 				end
 			elseif highestKey >= 2 then
 				currentPercent = currentPercent + values[i] * .65 -- Teeming Affix
@@ -1274,6 +1286,40 @@ keyStarter:SetScript("OnEvent", function(self, event, arg1)
 		keyMap.ioInfo.GD_io:SetText(string.format("Highest Gundrak Key: %d", highestGD))
 		keyMap.ioInfo.GD_io:Show()
 		keyMap.ioInfo:Hide()
+
+		keyMap.ioInfo.s1_affixes = keyMap.ioInfo:CreateFontString(nil, "Overlay","QuestFont_Enormous")
+		keyMap.ioInfo.s1_affixes:SetPoint("Right", keyMap.ioInfo, "Right", -10, 50)
+		keyMap.ioInfo.s1_affixes:SetText("Season 1 Affixes")
+		keyMap.ioInfo.s1_affixes:Show()
+
+		keyMap.ioInfo.s1_affix1 = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontWhiteSmall")
+		keyMap.ioInfo.s1_affix1:SetPoint("Right", keyMap.ioInfo, "Right", -10, -40)
+		keyMap.ioInfo.s1_affix1:SetText("Chain-Killing - Gain a 5 second bonus to % after killing an enemy, stacks.")
+		keyMap.ioInfo.s1_affix1:Show()
+
+		keyMap.ioInfo.s1_affix2 = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontWhiteSmall")
+		keyMap.ioInfo.s1_affix2:SetPoint("Right", keyMap.ioInfo, "Right", -10, 20)
+		keyMap.ioInfo.s1_affix2:SetText("Bounty Hunter - One enemy worth considerably more %, all others are less.")
+		keyMap.ioInfo.s1_affix2:Show()
+
+		keyMap.ioInfo.s1_affix3 = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontWhiteSmall")
+		keyMap.ioInfo.s1_affix3:SetPoint("Right", keyMap.ioInfo, "Right", -10, 0)
+		keyMap.ioInfo.s1_affix3:SetText("Teeming - Mobs are worth less %, must pull more.")
+		keyMap.ioInfo.s1_affix3:Show()
+
+		keyMap.ioInfo.s1_affix4 = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontWhiteSmall")
+		keyMap.ioInfo.s1_affix4:SetPoint("Right", keyMap.ioInfo, "Right", -10, -20)
+		keyMap.ioInfo.s1_affix4:SetText("Bloodletting - Gain massive % per kill for 5 seconds after a kill.")
+		keyMap.ioInfo.s1_affix4:Show()
+
+		keyMap.ioInfo.s1_affix5 = keyMap.ioInfo:CreateFontString(nil, "Overlay","GameFontWhiteSmall")
+		keyMap.ioInfo.s1_affix5:SetPoint("Right", keyMap.ioInfo, "Right", -10, -60)
+		keyMap.ioInfo.s1_affix5:SetText("Gatekeepers - Two bosses must die within 5 seconds of each other.")
+		keyMap.ioInfo.s1_affix5:Show()
+		keyMap.ioInfo:Hide()
+
+
+		-- IO Info Affix Descriptions.
 	end	
 end)
 
@@ -1464,10 +1510,15 @@ local function StartKey()
 		keyManager.keyImage.texture = y
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(AK_Bosses)
+
+		keyStarted = true
+		-- Affixes go down here.
+		if highestKey >= 4 then
+			ApplyKillingSpree()
+		end
 		if highestKey >= 6 then
 			ApplyBountyHunter(AK_Values)
 		end
-		keyStarted = true
 	elseif GetZoneText() == "Halls of Lightning" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1479,6 +1530,10 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(HOL_Bosses)
 		keyStarted = true
+		-- Affixes go down here.
+		if highestKey >= 4 then
+			ApplyKillingSpree()
+		end
 	elseif GetZoneText() == "Halls of Stone" then
 		keyStarted = true
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
@@ -1502,6 +1557,7 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(OC_Bosses)
 		keyStarted = true
+
 	elseif GetZoneText() == "The Nexus" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1513,6 +1569,9 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(NX_Bosses)
 		keyStarted = true
+		if highestKey >= 4 then
+			ApplyKillingSpree()
+		end
 	elseif GetZoneText() == "Gundrak" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1524,6 +1583,9 @@ local function StartKey()
 		maxBosses = table.getn(GD_Bosses)
 		keyManager.keyImage:Show()
 		keyStarted = true
+		if highestKey >= 4 then
+			ApplyKillingSpree()
+		end
 	elseif GetZoneText() == "Drak'Tharon Keep" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1535,6 +1597,9 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(DTK_Bosses)
 		keyStarted = true
+		if highestKey >= 4 then
+			ApplyKillingSpree()
+		end
 	elseif GetZoneText() == "Utgarde Pinnacle" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1546,6 +1611,9 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(UP_Bosses)
 		keyStarted = true
+		if highestKey >= 4 then
+			ApplyKillingSpree()
+		end
 		if highestKey >= 6 then
 			ApplyBountyHunter(UP_Values)
 		end
@@ -1560,6 +1628,9 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(UK_Bosses)
 		keyStarted = true
+		if highestKey >= 4 then
+			ApplyKillingSpree()
+		end
 	else
 		keyStarted = false
 	end
@@ -1579,9 +1650,11 @@ local function StartKey()
 			if highestKey >= 10 then
 				keyManager.affixes:SetText("Affixes: Teeming, Bloodletting, Gatekeepers")
 			elseif highestKey >= 8 then
-				keyManager.affixes:SetText("Affixes: Teeming, Bloodletting, Hitman")
+				keyManager.affixes:SetText("Affixes: Teeming, Bloodletting, Bounty Hunter")
+			elseif highestKey >= 6 and (GetZoneText() == "The Nexus" or GetZoneText() == "Halls of Lightning" or GetZoneText() == "Gundrak") then
+				keyManager.affixes:SetText("Affixes: Teeming, Chain-Killing")
 			elseif highestKey >= 6 then
-				keyManager.affixes:SetText("Affixes: Teeming, Chain-Killing, Hitman")
+				keyManager.affixes:SetText("Affixes: Teeming, Bounty Hunter")
 			elseif highestKey >= 4 then
 				keyManager.affixes:SetText("Affixes: Teeming, Chain-Killing")
 			elseif highestKey >= 2 then
@@ -1607,6 +1680,9 @@ local function StartKey()
 						RemoveBountyHunter(AK_Values)
 					elseif highestKey >= 6 and GetZoneText() == "Utgarde Pinnacle" then
 						RemoveBountyHunter(UP_Values)
+					end
+					if highestKey >= 4 then
+						RemoveKillingSpree()
 					end
 					-- TODO: Add victory screen and give user IO.
 					keyMap:Show()
@@ -1639,7 +1715,7 @@ local function StartKey()
 				keyMap:Show()
 				keyManager:Hide()
 			else
-				z:SetPoint("CENTER", keyManager.innerFrame, "LEFT", currentPercent + 10, 10)
+				z:SetPoint("CENTER", keyManager.innerFrame, "LEFT", math.min(100, currentPercent) + 10, 10)
 				z:SetSize(200 * math.min(1, ((currentPercent + .01) / 100)), 10)
 				t:SetTexture("Interface\\GLUES\\LoadingBar\\Loading-BarFill.blp")
 				t:SetAllPoints(z)
