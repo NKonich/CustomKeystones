@@ -247,7 +247,7 @@ local function OnEvent(self, event, arg1)
 		if GetZoneText() == "The Blood Furnace" then
 			Search(destName, BF, BF_Bosses, BF_Values)
 		-- Crappy hard coded solution that works for now: Checks the zone and then runs through the tables.
-		elseif GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
+		elseif GetZoneText() == "Ahn'kahet: The Old Kingdom" then
 			Search(destName, AK, AK_Bosses, AK_Values)
 		elseif GetZoneText() == "The Nexus" then
 			Search(destName, NX, NX_Bosses, NX_Values)
@@ -1346,7 +1346,7 @@ keyStarter.levelUpButton:SetNormalFontObject("GameFontNormalLarge")
 keyStarter.levelUpButton:SetHighlightFontObject("GameFontHighlightLarge")
 keyStarter.levelUpButton:SetScript("OnClick", function()
 	if not (highestKey > math.max(highestAK, highestGD, highestHOL, highestNX, highestUP)) then
-		highestKey = math.min(10, highestKey + 1)
+		highestKey = math.min(20, highestKey + 1)
 	end
 end)
 
@@ -1469,7 +1469,7 @@ local function StartKey()
 
 
 	local function incrementVictory(text) 
-		if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
+		if GetZoneText() == "Ahn'kahet: The Old Kingdom" then
 			if highestKey > highestAK then
 				highestAK = highestAK + 1
 			end
@@ -1500,7 +1500,7 @@ local function StartKey()
 	ResetClock()
 	keyManager:Show()
 	bossesDowned = 0
-	if GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
+	if GetZoneText() == "Ahn'kahet: The Old Kingdom" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
 		keyManager.keyImage:SetSize(100, 100)
@@ -1510,15 +1510,9 @@ local function StartKey()
 		keyManager.keyImage.texture = y
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(AK_Bosses)
-
 		keyStarted = true
 		-- Affixes go down here.
-		if highestKey >= 4 then
-			ApplyKillingSpree()
-		end
-		if highestKey >= 6 then
-			ApplyBountyHunter(AK_Values)
-		end
+		
 	elseif GetZoneText() == "Halls of Lightning" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1611,12 +1605,6 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(UP_Bosses)
 		keyStarted = true
-		if highestKey >= 4 then
-			ApplyKillingSpree()
-		end
-		if highestKey >= 6 then
-			ApplyBountyHunter(UP_Values)
-		end
 	elseif GetZoneText() == "Utgarde Keep" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1676,7 +1664,7 @@ local function StartKey()
 				if currentPercent >= 100 and bossesDowned == maxBosses then
 					print("You have completed the keystone, congratulations!")
 					incrementVictory(GetZoneText())
-					if highestKey >= 6 and GetZoneText() == "Ahn'Kahet: The Old Kingdom" then
+					if highestKey >= 6 and GetZoneText() == "Ahn'kahet: The Old Kingdom" then
 						RemoveBountyHunter(AK_Values)
 					elseif highestKey >= 6 and GetZoneText() == "Utgarde Pinnacle" then
 						RemoveBountyHunter(UP_Values)
@@ -1739,7 +1727,17 @@ keyStarter.startButton:SetSize(200, 30)
 keyStarter.startButton:SetText("Start Key")
 keyStarter.startButton:SetNormalFontObject("GameFontNormalLarge")
 keyStarter.startButton:SetHighlightFontObject("GameFontHighlightLarge")
-keyStarter.startButton:SetScript("OnClick", StartKey)
+keyStarter.startButton:SetScript("OnClick", function()
+	if highestKey >= 4 and (GetZoneText() == "Ahn'kahet: The Old Kingdom" or GetZoneText() == "Gundrak") then
+		ApplyKillingSpree()
+	end
+	if highestKey >= 6 and GetZoneText() == "Ahn'kahet: The Old Kingdom" then
+		ApplyBountyHunter(AK_Values)
+	elseif highestKey >= 6 and GetZoneText() == "Utgarde Pinnacle" then
+			ApplyBountyHunter(UP_Values)
+	end
+	StartKey()
+end)
 
 -- Slash commands for users
 SLASH_CK1 = "/ck"
