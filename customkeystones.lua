@@ -341,31 +341,13 @@ end
 
 keyManager:Hide()
 
-
-
---[[ Core Menu for starting Keystones
-		
-		TODO:
-			Implement a selector function for the UI menu, letting people pick their dungeon and difficulty level.
-			Add IO Score to the Menu.
-
-]]
-
 local keyMap = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
 keyMap:SetPoint("LEFT")
 keyMap:SetSize(950, 600)
-
---[[
-	TODO: Add a toggle switch to the keyMap frame.
-	 - hide and show the keyStarter frame
-	 - Add a UI Frame for showing mob % with name.
-	-- Add buttons for specific sub zones.
-		-Display these down at the bottom.
 	
 																													------------- THIS IS WHERE WORK IS NEEDED --------------------
 
 
-]]
 keyMap.keyPlanFrame = CreateFrame("Frame", nil, keyMap, "InsetFrameTemplate2")
 keyMap.keyPlanFrame:SetSize(600, 400)
 keyMap.keyPlanFrame:SetPoint("CENTER", keyMap, "CENTER", 170, 80)
@@ -911,7 +893,7 @@ end)
 keyMap.keyStatsThree:Show()
 
 keyMap.header = keyMap:CreateFontString(nil, "OVERLAY", "QuestFont_Enormous")
-keyMap.header:SetPoint("LEFT", keyMap, "LEFT", 40, 230)
+keyMap.header:SetPoint("LEFT", keyMap, "LEFT", 40, 245)
 keyMap.header:SetText("CustomKeys Season 1")
 keyMap.header:Show()
 
@@ -1105,43 +1087,72 @@ keyMap.keyStatus.s1 = CreateFrame("Frame", nil, keyMap.keyStatus)
 keyMap.keyStatus.s1:SetPoint("CENTER", keyMap.keyStatus, "CENTER")
 keyMap.keyStatus.s1:SetSize(600, 150)
 keyMap.keyStatus.s1.keyOne = CreateFrame("Button", nil, keyMap.keyStatus.s1, "GameMenuButtonTemplate")
-keyMap.keyStatus.s1.keyOne:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", -240, 10)
+keyMap.keyStatus.s1.keyOne:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", -240, 20)
 keyMap.keyStatus.s1.keyOne:SetSize(120, 30)
 keyMap.keyStatus.s1.keyOne:SetText("Ahn'Kahet")
 keyMap.keyStatus.s1.keyOne:Show()
 keyMap.keyStatus.s1.keyOne:SetScript("OnClick", function()
 	setKeyMap("AhnKahet", 1)
 end)
+keyMap.keyStatus.s1.imageOne = CreateFrame("Frame", nil, keyMap.keyStatus.s1)
+keyMap.keyStatus.s1.imageOne:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", -240, 50)
+keyMap.keyStatus.s1.imageOne:SetSize(80, 80)
+local y = keyMap.keyStatus.s1.imageOne:CreateTexture(nil, "OVERLAY")
+y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Ahnkalet.blp")
+y:SetAllPoints()
+keyMap.keyStatus.s1.imageOne.texture = y
+
 
 keyMap.keyStatus.s1.keyTwo = CreateFrame("Button", nil, keyMap.keyStatus.s1, "GameMenuButtonTemplate")
-keyMap.keyStatus.s1.keyTwo:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", -120, 10)
+keyMap.keyStatus.s1.keyTwo:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", -120, 20)
 keyMap.keyStatus.s1.keyTwo:SetSize(120, 30)
 keyMap.keyStatus.s1.keyTwo:SetText("Halls of Lightning")
 keyMap.keyStatus.s1.keyTwo:Show()
 keyMap.keyStatus.s1.keyTwo:SetScript("OnClick", function()
 	setKeyMap("HallsOfLightning", 1)
 end)
+keyMap.keyStatus.s1.imageTwo = CreateFrame("Frame", nil, keyMap.keyStatus.s1)
+keyMap.keyStatus.s1.imageTwo:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", -120, 50)
+keyMap.keyStatus.s1.imageTwo:SetSize(80, 80)
+local y = keyMap.keyStatus.s1.imageTwo:CreateTexture(nil, "OVERLAY")
+y:SetTexture("Interface\\LFGFRAME\\LFGIcon-HALLSOFLIGHTNING.blp")
+y:SetAllPoints()
+keyMap.keyStatus.s1.imageTwo.texture = y
 
 keyMap.keyStatus.s1.keyThree = CreateFrame("Button", nil, keyMap.keyStatus.s1, "GameMenuButtonTemplate")
-keyMap.keyStatus.s1.keyThree:SetPoint("BOTTOM", keyMap.keyStatus, "BOTTOM", 0, 10)
+keyMap.keyStatus.s1.keyThree:SetPoint("BOTTOM", keyMap.keyStatus, "BOTTOM", 0, 20)
 keyMap.keyStatus.s1.keyThree:SetSize(120, 30)
 keyMap.keyStatus.s1.keyThree:SetText("Gundrak")
 keyMap.keyStatus.s1.keyThree:Show()
 keyMap.keyStatus.s1.keyThree:SetScript("OnClick", function()
 	setKeyMap("GunDrak", 1)
 end)
+keyMap.keyStatus.s1.imageThree = CreateFrame("Frame", nil, keyMap.keyStatus.s1)
+keyMap.keyStatus.s1.imageThree:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 0, 50)
+keyMap.keyStatus.s1.imageThree:SetSize(80, 80)
+local y = keyMap.keyStatus.s1.imageThree:CreateTexture(nil, "OVERLAY")
+y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Gundrak.blp")
+y:SetAllPoints()
+keyMap.keyStatus.s1.imageThree.texture = y
 
 keyMap.keyStatus.s1.keyFour = CreateFrame("Button", nil, keyMap.keyStatus.s1, "GameMenuButtonTemplate")
-keyMap.keyStatus.s1.keyFour:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 120, 10)
+keyMap.keyStatus.s1.keyFour:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 120, 20)
 keyMap.keyStatus.s1.keyFour:SetSize(120, 30)
 keyMap.keyStatus.s1.keyFour:SetText("The Nexus")
 keyMap.keyStatus.s1.keyFour:Show()
 keyMap.keyStatus.s1.keyFour:SetScript("OnClick", function()
 	setKeyMap("TheNexus", 1)
 end)
+keyMap.keyStatus.s1.imageFour = CreateFrame("Frame", nil, keyMap.keyStatus.s1)
+keyMap.keyStatus.s1.imageFour:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 120, 50)
+keyMap.keyStatus.s1.imageFour:SetSize(80, 80)
+local y = keyMap.keyStatus.s1.imageFour:CreateTexture(nil, "OVERLAY")
+y:SetTexture("Interface\\LFGFRAME\\LFGIcon-TheNexus.blp")
+y:SetAllPoints()
+keyMap.keyStatus.s1.imageFour.texture = y
 
 keyMap.keyStatus.s1.keyFive = CreateFrame("Button", nil, keyMap.keyStatus.s1, "GameMenuButtonTemplate")
-keyMap.keyStatus.s1.keyFive:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 240, 10)
+keyMap.keyStatus.s1.keyFive:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 240, 20)
 keyMap.keyStatus.s1.keyFive:SetSize(120, 30)
 keyMap.keyStatus.s1.keyFive:SetText("Utgarde Pinnacle")
 keyMap.keyStatus.s1.keyFive:Show()
@@ -1149,32 +1160,13 @@ keyMap.keyStatus.s1.keyFive:SetScript("OnClick", function()
 	setKeyMap("UtgardePinnacle", 1)
 end)
 
-keyMap.keyStatus.s1.keyOneUnranked = CreateFrame("Button", nil, keyMap.keyStatus.s1, "GameMenuButtonTemplate")
-keyMap.keyStatus.s1.keyOneUnranked:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", -120, 100)
-keyMap.keyStatus.s1.keyOneUnranked:SetSize(120, 30)
-keyMap.keyStatus.s1.keyOneUnranked:SetText("The Oculus")
-keyMap.keyStatus.s1.keyOneUnranked:Show()
-keyMap.keyStatus.s1.keyOneUnranked:SetScript("OnClick", function()
-	setKeyMap("Nexus80", 1)
-end)
-
-keyMap.keyStatus.s1.keyTwoUnranked = CreateFrame("Button", nil, keyMap.keyStatus.s1, "GameMenuButtonTemplate")
-keyMap.keyStatus.s1.keyTwoUnranked:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 0, 100)
-keyMap.keyStatus.s1.keyTwoUnranked:SetSize(120, 30)
-keyMap.keyStatus.s1.keyTwoUnranked:SetText("Drak'Tharon Keep")
-keyMap.keyStatus.s1.keyTwoUnranked:Show()
-keyMap.keyStatus.s1.keyTwoUnranked:SetScript("OnClick", function()
-	setKeyMap("DrakTharonKeep", 1)
-end)
-
-keyMap.keyStatus.s1.keyThreeUnranked = CreateFrame("Button", nil, keyMap.keyStatus.s1, "GameMenuButtonTemplate")
-keyMap.keyStatus.s1.keyThreeUnranked:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 120, 100)
-keyMap.keyStatus.s1.keyThreeUnranked:SetSize(120, 30)
-keyMap.keyStatus.s1.keyThreeUnranked:SetText("Halls of Stone")
-keyMap.keyStatus.s1.keyThreeUnranked:Show()
-keyMap.keyStatus.s1.keyThreeUnranked:SetScript("OnClick", function()
-	setKeyMap("Ulduar77", 1)
-end)
+keyMap.keyStatus.s1.imageFive = CreateFrame("Frame", nil, keyMap.keyStatus.s1)
+keyMap.keyStatus.s1.imageFive:SetPoint("BOTTOM", keyMap.keyStatus.s1, "BOTTOM", 240, 50)
+keyMap.keyStatus.s1.imageFive:SetSize(80, 80)
+local y = keyMap.keyStatus.s1.imageFive:CreateTexture(nil, "OVERLAY")
+y:SetTexture("Interface\\LFGFRAME\\LFGIcon-UtgardePinnacle.blp")
+y:SetAllPoints()
+keyMap.keyStatus.s1.imageFive.texture = y
 
 
 
@@ -1351,7 +1343,7 @@ keyStarter.locationValidity:SetPoint("CENTER", keyStarter, "CENTER", 0, -15)
 
 -- Increase Key Difficulty
 keyStarter.levelUpButton = CreateFrame("Button", nil, keyStarter, "GameMenuButtonTemplate")
-keyStarter.levelUpButton:SetPoint("CENTER", keyStarter, "CENTER", 60, -30)
+keyStarter.levelUpButton:SetPoint("CENTER", keyStarter, "CENTER", 60, -40)
 keyStarter.levelUpButton:SetSize(20, 20)
 keyStarter.levelUpButton:SetText("+")
 keyStarter.levelUpButton:SetNormalFontObject("GameFontNormalLarge")
@@ -1365,7 +1357,7 @@ end)
 -- Decrease Key Difficulty
 keyStarter.levelUpButton:Hide()
 keyStarter.levelDownButton = CreateFrame("Button", nil, keyStarter, "GameMenuButtonTemplate")
-keyStarter.levelDownButton:SetPoint("CENTER", keyStarter, "CENTER", -60, -30)
+keyStarter.levelDownButton:SetPoint("CENTER", keyStarter, "CENTER", -60, -40)
 keyStarter.levelDownButton:SetSize(20, 20)
 keyStarter.levelDownButton:SetText("-")
 keyStarter.levelDownButton:SetNormalFontObject("GameFontNormalLarge")
@@ -1378,7 +1370,7 @@ keyStarter.levelDownButton:Hide()
 -- Check if the player has changed to a knew area.
 local zoneChanged = true
 keyStarter.locationHighest = keyStarter:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-keyStarter.locationHighest:SetPoint("CENTER", keyStarter, "CENTER", 0, -30)
+keyStarter.locationHighest:SetPoint("CENTER", keyStarter, "CENTER", 0, -40)
 keyStarter:SetScript("OnUpdate", function(self, elapsed)
 	keyStarter.locationText:SetText(GetZoneText())
 	keyStarter.locationText:Show()
@@ -1400,18 +1392,23 @@ keyStarter:SetScript("OnUpdate", function(self, elapsed)
 		if zoneChanged then
 
 			if GetZoneText() == "Utgarde Pinnacle"  then
+				setKeyMap("UtgardePinnacle", 1)
 				highestKey = highestUP
 				zoneChanged = false
 			elseif GetZoneText() == "Ahn'kahet: The Old Kingdom" then
+				setKeyMap("AhnKahet", 1)
 				highestKey = highestAK
 				zoneChanged = false
 			elseif GetZoneText() == "Halls of Lightning" then
+				setKeyMap("HallsOfLightning", 1)
 				highestKey = highestHOL
 				zoneChanged = false
 			elseif GetZoneText() == "The Nexus" then
+				setKeyMap("TheNexus", 1)
 				highestKey = highestNX
 				zoneChanged = false
 			elseif GetZoneText() == "Gundrak" then
+				setKeyMap("Gundrak", 1)
 				highestKey = highestGD
 				zoneChanged = false
 			end
@@ -1430,8 +1427,14 @@ keyStarter:SetScript("OnUpdate", function(self, elapsed)
 	end
 end)
 
+
+
 setKeyMap("AhnKahet", 1)
 
+keyStarter.border = CreateFrame("Frame", nil, keyStarter, "InsetFrameTemplate2")
+keyStarter.border:SetPoint("CENTER", keyStarter, "CENTER", 0, -20)
+keyStarter.border:SetSize(345, 580)
+keyStarter.border:Show()
 
 -- Unranked Season Key Icons
 keyStarter.unranked = keyStarter:CreateFontString(nil, "OVERLAY", "QuestFont_Enormous")
@@ -1478,8 +1481,6 @@ keyStarter.ioLabel:SetText("IO Score:")
 
 -- This is called when the "Start Key" button is hit, it shows the keyManager (manages active keys) and handles setting the onUpdate method for the keyManager.
 local function StartKey()
-
-
 	local function incrementVictory(text) 
 		if GetZoneText() == "Ahn'kahet: The Old Kingdom" then
 			if highestKey > highestAK then
@@ -1643,13 +1644,12 @@ local function StartKey()
 	-- KeyManager's scripts to handle deaths and to update the clock/timers.
 	keyManager:SetScript("OnEvent", OnEvent)
 	keyManager:SetScript("OnUpdate", function(self, elapsed)
+
+		-- TODO: Create an invisible frame to do this step.
 		if currentPercent == nil then
 			currentPercent = 0
 		end
 		timeRemaining = math.max(0, timeRemaining - elapsed)
-		-- Checks if player leaves or enters the dungeon.
-		-- This can potentially all be moved into the OnEvent method during start-up.
-		
 		if keyStarted then
 			keyManager.keyText:SetText(GetZoneText())
 			keyManager.keySubtext:SetText(string.format("Bosses: %d/%d", bossesDowned, maxBosses))
@@ -1765,6 +1765,8 @@ keyStarter.startButton:SetScript("OnClick", function()
 	end
 	StartKey()
 end)
+
+
 
 -- Slash commands for users
 SLASH_CK1 = "/ck"
