@@ -25,6 +25,18 @@ BD_Bosses_Toggle1 = {0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0}
 BD_Bosses_Toggle2 = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1}
 
 -- Burning Crusade Dungeons
+UB = {}
+
+SV = {}
+
+MT = {}
+
+SL = {}
+
+ARC = {}
+
+MC = {}
+
 BF = {"Felguard Annihilator", "Felguard Brute", "Felhound Manastalker", "Hellfire Imp", "Nascent Fel Orc", "Seductress", "Laughing Skull Enforcer", "Laughing Skull Rogue", "Laughing Skull Warden", "Laughing Skull Legionnaire",  "Shadowmoon Channeler", "Shadowmoon Summoner", "Shadowmoon Technician", "Shadowmoon Warlock", "Shadowmoon Adept"}
 BF_Values = {6, 4, .1, .1, .3, .2, 2, 3, 2.4, 2.6, 2.8, 2.7, 2.6, 2.5}
 BF_Bosses = {"The Maker", "Broggok", "Keli'dan the Breaker"}
@@ -277,7 +289,7 @@ end
 ]]
 keyManager = CreateFrame("Frame", nil, UIParent, "BasicFrameTemplateWithInset")
 keyManager:SetPoint("LEFT")
-keyManager:SetSize(250, 300)
+keyManager:SetSize(275, 375)
 
 
 
@@ -296,7 +308,7 @@ keyManager.timerText:SetText("Time Remaining:")
 -- Progress Bar Handlers
 keyManager.innerFrame = CreateFrame("Frame", nil, keyManager, "SmallCastingBarFrameTemplate")
 keyManager.innerFrame:SetPoint("CENTER", keyManager, "BOTTOM", 0, 60)
-keyManager.innerFrame:SetSize(240, 30)
+keyManager.innerFrame:SetSize(220, 30)
 keyManager.innerFrame:SetScript("OnUpdate", nil)
 -- Creates the correct texture.
 local z = CreateFrame("Frame",nil,keyManager.innerFrame)
@@ -309,13 +321,13 @@ z.texture = t
 z:Show()
 -- Handles the Dungeon Image and text above the image.
 keyManager.keyText = keyManager:CreateFontString(nil, "OVERLAY", "QuestFont_Enormous")
-keyManager.keyText:SetPoint("CENTER", keyManager, "CENTER", 0, 100)
+keyManager.keyText:SetPoint("CENTER", keyManager, "CENTER", 0, 125)
 keyManager.keyText:Show()
 keyManager.keySubtext = keyManager:CreateFontString(nil, "OVERLAY", "GameFontWhiteSmall")
-keyManager.keySubtext:SetPoint("CENTER", keyManager, "CENTER", 0, 80)
+keyManager.keySubtext:SetPoint("CENTER", keyManager, "CENTER", 0, 60)
 keyManager.keySubtext:Show()
 keyManager.affixes = keyManager:CreateFontString(nil, "OVERLAY", "GameFontHighlightExtraSmall")
-keyManager.affixes:SetPoint("CENTER", keyManager, "CENTER", 0, 65)
+keyManager.affixes:SetPoint("CENTER", keyManager, "CENTER", 0, 100)
 keyManager.affixes:Show()
 
 local function SetIconTexture(iconFrame, textureLink)
@@ -1540,6 +1552,7 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(HOS_Bosses)
 		keystarted = true
+		-- Affixes go down here
 	elseif GetZoneText() == "The Oculus" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1551,6 +1564,7 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(OC_Bosses)
 		keyStarted = true
+		-- Affixes go down here
 
 	elseif GetZoneText() == "The Nexus" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
@@ -1563,9 +1577,11 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(NX_Bosses)
 		keyStarted = true
+		-- Affixes go down here
 		if highestKey >= 4 then
 			ApplyKillingSpree()
 		end
+
 	elseif GetZoneText() == "Gundrak" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1580,6 +1596,7 @@ local function StartKey()
 		if highestKey >= 4 then
 			ApplyKillingSpree()
 		end
+
 	elseif GetZoneText() == "Drak'Tharon Keep" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1594,6 +1611,7 @@ local function StartKey()
 		if highestKey >= 4 then
 			ApplyKillingSpree()
 		end
+
 	elseif GetZoneText() == "Utgarde Pinnacle" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1605,6 +1623,9 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(UP_Bosses)
 		keyStarted = true
+		if highestKey >= 4 then
+			ApplyKillingSpree()
+		end
 	elseif GetZoneText() == "Utgarde Keep" then
 		keyManager.keyImage = CreateFrame("Frame", nil, keyManager)
 		keyManager.keyImage:SetPoint("CENTER", keyManager, "CENTER", 0, 0)
@@ -1616,9 +1637,6 @@ local function StartKey()
 		keyManager.keyImage:Show()
 		maxBosses = table.getn(UK_Bosses)
 		keyStarted = true
-		if highestKey >= 4 then
-			ApplyKillingSpree()
-		end
 	else
 		keyStarted = false
 	end
@@ -1634,9 +1652,10 @@ local function StartKey()
 		
 		if keyStarted then
 			keyManager.keyText:SetText(GetZoneText())
-			keyManager.keySubtext:SetText(string.format("Bosses killed: %d/%d", bossesDowned, maxBosses))
+			keyManager.keySubtext:SetText(string.format("Bosses: %d/%d", bossesDowned, maxBosses))
 			if highestKey >= 10 then
 				keyManager.affixes:SetText("Affixes: Teeming, Bloodletting, Gatekeepers")
+
 			elseif highestKey >= 8 then
 				keyManager.affixes:SetText("Affixes: Teeming, Bloodletting, Bounty Hunter")
 			elseif highestKey >= 6 and (GetZoneText() == "The Nexus" or GetZoneText() == "Halls of Lightning" or GetZoneText() == "Gundrak") then
@@ -1645,8 +1664,16 @@ local function StartKey()
 				keyManager.affixes:SetText("Affixes: Teeming, Bounty Hunter")
 			elseif highestKey >= 4 then
 				keyManager.affixes:SetText("Affixes: Teeming, Chain-Killing")
-			elseif highestKey >= 2 then
+			elseif highestKey >= 0 then
 				keyManager.affixes:SetText("Affixes: Teeming")
+				keyManager.affixImage = CreateFrame("Frame", nil, keyManager)
+				keyManager.affixImage:SetPoint("CENTER", keyManager.innerFrame, "CENTER", 0, 50)
+				keyManager.affixImage:SetSize(30, 30)
+				local y = keyManager.affixImage:CreateTexture(nil, "OVERLAY")
+				y:SetTexture("Interface\\LFGFRAME\\LFGIcon-Utgarde.blp")
+				y:SetAllPoints()
+				keyManager.affixImage.texture = y
+				keyManager.affixImage:Show()
 			else
 				keyManager.affixes:SetText("Affixes: None")
 			end
@@ -1709,7 +1736,7 @@ local function StartKey()
 				t:SetAllPoints(z)
 				z.texture = t
 				z:Show()
-				keyManager.text:SetText(string.format("%s %d Keystone", GetZoneText(), highestKey))
+				keyManager.text:SetText(string.format("Keystone: %s - %d", GetZoneText(), highestKey))
 				keyManager.timer:SetText(string.format("%d: %02d \nCurrent Percent: %d", timeRemaining / 60, timeRemaining % 60, currentPercent))
 				keyStarter:Hide()
 				keyMap:Hide()
@@ -1734,7 +1761,7 @@ keyStarter.startButton:SetScript("OnClick", function()
 	if highestKey >= 6 and GetZoneText() == "Ahn'kahet: The Old Kingdom" then
 		ApplyBountyHunter(AK_Values)
 	elseif highestKey >= 6 and GetZoneText() == "Utgarde Pinnacle" then
-			ApplyBountyHunter(UP_Values)
+		ApplyBountyHunter(UP_Values)
 	end
 	StartKey()
 end)
